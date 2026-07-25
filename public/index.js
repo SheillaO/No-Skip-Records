@@ -17,6 +17,7 @@ async function getProducts(filters = {}) {
 // ===== Product Rendering =====
 
 function renderProducts(products) {
+  lastRenderedProducts = products
   const albumsContainer = document.getElementById('products-container')
   const cards = products.map((album) => {
     return `
