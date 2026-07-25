@@ -306,3 +306,31 @@ button:active {
         padding: var(--space-md);
     }
 }
+
+#shuffle-btn, #surprise-btn {
+    padding: 0.5em 1em;
+    background-color: var(--color-bg-lightest);
+    color: var(--color-text);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+}
+
+#shuffle-btn:hover, #surprise-btn:hover {
+    background-color: var(--color-accent);
+    color: black;
+}
+
+.surprise-pick {
+    max-width: 250px;
+    margin: 1em auto;
+    padding: var(--space-md);
+    background-color: var(--color-bg-lightest);
+    border-radius: var(--radius-lg);
+    text-align: center;
+}
+
+.surprise-pick img {
+    width: 100%;
+    border-radius: var(--radius-md);
+}
