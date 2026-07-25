@@ -101,3 +101,27 @@ document.getElementById('genre-select').addEventListener('change', async (e) => 
   const products = await getProducts(genre ? { genre } : {})
   renderProducts(products)
 })
+
+// NEW: picks ONE random item from the full catalog and shows it
+// separately — it never touches the grid you're already looking at.
+async function surpriseMe() {
+  const allProducts = await getProducts() // no filters = full catalog
+  const randomIndex = Math.floor(Math.random() * allProducts.length)
+  const pick = allProducts[randomIndex]
+
+  document.getElementById('surprise-card').innerHTML = `
+    <div class="surprise-pick">
+      <p>🎲 You might also like:</p>
+      <img src="./images/${pick.image}" alt="${pick.title}">
+      <h3>${pick.title}</h3>
+      <h4>${pick.artist}</h4>
+      <button id="dismiss-surprise">✕ Dismiss</button>
+    </div>
+  `
+
+  document.getElementById('dismiss-surprise').addEventListener('click', () => {
+    document.getElementById('surprise-card').innerHTML = ''
+  })
+}
+
+document.getElementById('surprise-btn').addEventListener('click', surpriseMe)
