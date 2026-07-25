@@ -26,10 +26,10 @@ function renderProducts(products) {
         <h2>${album.title}</h2>
         <h3>${album.artist}</h3>
         <p>$${album.price}</p>
-        <button class="add-btn">Add to Cart</button>
+       <button class="add-btn" data-id="${album.id}">Add to Cart</button>
         <p class="genre-label">${album.genre}</p>
       </div>
-    `
+    `;
   }).join('')
 
   albumsContainer.innerHTML = cards
@@ -126,3 +126,20 @@ async function surpriseMe() {
 }
 
 document.getElementById('surprise-btn').addEventListener('click', surpriseMe)
+
+// NEW: "My Crate" — once something's added, it stays added.
+// Inspired directly by Spotify bricking Car Thing devices people
+// had already paid for. Nothing here ever gets silently taken back.
+document.getElementById('products-container').addEventListener('click', (e) => {
+  if (e.target.classList.contains('add-btn')) {
+    const id = e.target.dataset.id
+    let myCrate = JSON.parse(localStorage.getItem('myCrate')) || []
+
+    if (!myCrate.includes(id)) {
+      myCrate.push(id)
+      localStorage.setItem('myCrate', JSON.stringify(myCrate))
+      e.target.textContent = '✓ In Your Crate, Forever'
+      e.target.disabled = true
+    }
+  }
+})
