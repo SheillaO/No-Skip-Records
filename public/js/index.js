@@ -45,3 +45,12 @@ document.querySelector("form").addEventListener("submit", (e) => {
   e.preventDefault();
   applySearchFilter();
 });
+
+document
+  .getElementById("genre-select")
+  .addEventListener("change", async (e) => {
+    const genre = e.target.value;
+    const products = await getProducts(genre ? { genre } : {});
+    lastRenderedProducts = products;
+    renderProducts(products);
+  });
