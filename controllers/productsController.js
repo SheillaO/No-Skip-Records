@@ -1,55 +1,53 @@
-import { getDBConnection } from '../db/db.js'
+import { getDBConnection } from "../db/db.js";
 
 export async function getGenres(req, res) {
-
   try {
+    const db = await getDBConnection();
 
-    const db = await getDBConnection()
+    const genreRows = await db.all("SELECT DISTINCT genre FROM products");
+    const genres = genreRows.map((row) => row.genre);
 
-    const genreRows = await db.all('SELECT DISTINCT genre FROM products')
-    const genres = genreRows.map(row => row.genre)
-    res.json(genres)
-
+    return res.json(genres);
   } catch (err) {
-
-    res.status(500).json({error: 'Failed to fetch genres', details: err.message})
-
+    return res
+      .status(500)
+      .json({ error: "Failed to fetch genres", details: err.message });
   }
 }
 
 export async function getProducts(req, res) {
-
   try {
+    const db = await getDBConnection();
 
-    const db = await getDBConnection()
+    let query = "SELECT * FROM products";
+    const conditions = [];
+    const params = [];
 
-    let query = 'SELECT * FROM products'
-    let params = []
+    const { genre, search } = req.query;
 
-    const { genre, search } = req.query
-
+    // 1. Handle Genre filter
     if (genre) {
-
-      query += ' WHERE genre = ?'
-      params.push(genre)
-
-    } else if (search) {
-
-      query += ' WHERE title LIKE ? OR artist LIKE ? OR genre LIKE ?'
-      const searchPattern = `%${search}%`
-      params.push(searchPattern, searchPattern, searchPattern)
-      
+      conditions.push("genre = ?");
+      params.push(genre);
     }
-    
-    const products = await db.all(query, params)
 
-    res.json(products)
+    // 2. Handle Search filter
+    if (search) {
+      conditions.push("(title LIKE ? OR artist LIKE ? OR genre LIKE ?)");
+      const searchPattern = `%${search}%`;
+      params.push(searchPattern, searchPattern, searchPattern);
+    }
 
+    // 3. Dynamically build the WHERE clause if filters exist
+    if (conditions.length > 0) {
+      query += " WHERE " + conditions.join(" AND ");
+    }
 
+    const products = await db.all(query, params);
+    return res.json(products);
   } catch (err) {
-
-    res.status(500).json({error: 'Failed to fetch products', details: err.message})
-
+    return res
+      .status(500)
+      .json({ error: "Failed to fetch products", details: err.message });
   }
-
 }

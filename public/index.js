@@ -17,7 +17,6 @@ async function getProducts(filters = {}) {
 // ===== Product Rendering =====
 
 function renderProducts(products) {
-  lastRenderedProducts = products
   const albumsContainer = document.getElementById('products-container')
   const cards = products.map((album) => {
     return `
@@ -26,10 +25,10 @@ function renderProducts(products) {
         <h2>${album.title}</h2>
         <h3>${album.artist}</h3>
         <p>$${album.price}</p>
-       <button class="add-btn" data-id="${album.id}">Add to Cart</button>
+        <button class="add-btn">Add to Cart</button>
         <p class="genre-label">${album.genre}</p>
       </div>
-    `;
+    `
   }).join('')
 
   albumsContainer.innerHTML = cards
@@ -101,45 +100,4 @@ document.getElementById('genre-select').addEventListener('change', async (e) => 
   const genre = e.target.value
   const products = await getProducts(genre ? { genre } : {})
   renderProducts(products)
-})
-
-// NEW: picks ONE random item from the full catalog and shows it
-// separately — it never touches the grid you're already looking at.
-async function surpriseMe() {
-  const allProducts = await getProducts() // no filters = full catalog
-  const randomIndex = Math.floor(Math.random() * allProducts.length)
-  const pick = allProducts[randomIndex]
-
-  document.getElementById('surprise-card').innerHTML = `
-    <div class="surprise-pick">
-      <p>🎲 You might also like:</p>
-      <img src="./images/${pick.image}" alt="${pick.title}">
-      <h3>${pick.title}</h3>
-      <h4>${pick.artist}</h4>
-      <button id="dismiss-surprise">✕ Dismiss</button>
-    </div>
-  `
-
-  document.getElementById('dismiss-surprise').addEventListener('click', () => {
-    document.getElementById('surprise-card').innerHTML = ''
-  })
-}
-
-document.getElementById('surprise-btn').addEventListener('click', surpriseMe)
-
-// NEW: "My Crate" — once something's added, it stays added.
-// Inspired directly by Spotify bricking Car Thing devices people
-// had already paid for. Nothing here ever gets silently taken back.
-document.getElementById('products-container').addEventListener('click', (e) => {
-  if (e.target.classList.contains('add-btn')) {
-    const id = e.target.dataset.id
-    let myCrate = JSON.parse(localStorage.getItem('myCrate')) || []
-
-    if (!myCrate.includes(id)) {
-      myCrate.push(id)
-      localStorage.setItem('myCrate', JSON.stringify(myCrate))
-      e.target.textContent = '✓ In Your Crate, Forever'
-      e.target.disabled = true
-    }
-  }
 })

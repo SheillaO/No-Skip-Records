@@ -12,7 +12,7 @@
     --color-bg-lightest: #333;
 
     /* Font */
-    --font-base: 'Poppins';
+    --font-base: 'Poppins', sans-serif;
     --font-heading: 'Plaster', sans-serif;
 
     /* Spacing */
@@ -59,6 +59,7 @@ h1 {
 
 h2 {
     font-size: 1.2rem;
+    padding: var(--space-xs); /* Kept from File 2 */
 }
 
 h3 {
@@ -76,21 +77,10 @@ a {
     font-size: 1em;
 }
 
-/* Commented out for recording */
-a:visited {
-    /* color: var(--color-accent); */
-}
-
 a:hover {
     color: var(--color-accent);
     text-decoration: underline;
 }
-
-a:focus {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-}
-
 
 /* -----------------------------------
    Layout / Structure
@@ -130,9 +120,9 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-md);
+    padding: var(--space-lg); /* Merged the deeper padding strategy from File 2 */
     gap: var(--space-md);
-
+    margin-bottom: 0;
 }
 
 /* -----------------------------------
@@ -143,11 +133,11 @@ footer {
     justify-content: flex-end;
     align-items: center;
     gap: 1em;
-    padding: var(--space-md) var(--space-md);
+    padding: var(--space-sm) var(--space-md);
     background-color: var(--color-bg-lightest);
-    position: sticky;
+    position: sticky; /* Sticky layout is preferred for user navigation scroll */
     top: 0;
-    z-index: 1;
+    z-index: 10;
 }
 
 .top-banner-greeting {
@@ -214,7 +204,9 @@ footer {
     border-radius: var(--radius-md);
 }
 
-.main-btn {
+/* Kept both naming variants identically so HTML 1 and HTML 2 button themes function */
+.main-btn, 
+.add-btn {
     padding: 0.8em 1.5em;
     background-color: var(--color-accent);
     color: white;
@@ -231,7 +223,7 @@ footer {
     margin-top: 0;
     padding: 0.2rem 0.5rem;
     background-color: var(--color-accent);
-    color: black; 
+    color: black;
     border-bottom-right-radius: var(--radius-md);
     border-top-left-radius: var(--radius-md);
 }
@@ -252,9 +244,8 @@ select {
 }
 
 /* -----------------------------------
-   Accessibility
+   Accessibility / Microinteractions
 ----------------------------------- */
-
 a:focus,
 button:focus,
 input:focus,
@@ -279,62 +270,8 @@ button:active {
 }
 
 /* -----------------------------------
-   Media Queries
+   Sign in/up forms (Preserved from File 1)
 ----------------------------------- */
-
-@media (max-width: 768px) {
-    .header-menu {
-        display: none;
-        flex-direction: column;
-        align-items: flex-start;
-        background-color: var(--color-bg-lightest);
-        padding: var(--space-md);
-        position: absolute;
-        top: 100%;
-        right: 0;
-        z-index: 1;
-        border-left: 2px solid var(--color-accent);
-        border-bottom: 2px solid var(--color-accent);
-        height: 100%; 
-        min-height: 100vh;
-        gap: 1em;
-    }
-
-    .header-menu.open {
-        display: flex;
-    }
-
-    .menu-toggle {
-        display: unset;
-        cursor: pointer;
-        background-color: transparent;
-        border: none;
-        color: white;
-        align-self: center;
-    }
-
-    .menu-toggle img {
-      display: block; 
-    }
-
-    .top-banner input {
-        margin-left: 0;
-        padding: var(--space-sm);
-    }
-
-    .products {
-        padding: 0 var(--space-md);
-    }
-
-    header {
-        padding: var(--space-md);
-    }
-}
-
-/* -----------------------------------
-   Sign in/up forms
------------------------------------ */
-
 .sign-forms {
     display: flex;
     flex-direction: column;
@@ -374,20 +311,22 @@ button:active {
     font-size: 1.1rem;
 }
 
-.form-btn:hover, .main-btn:hover {
+.form-btn:hover, 
+.main-btn:hover,
+.add-btn:hover {
     background-color: dodgerblue;
 }
 
-.form-btn:active, .main-btn:active {
+.form-btn:active, 
+.main-btn:active,
+.add-btn:active {
     background-color: yellow;
     color: black;
 }
 
-
 /* -----------------------------------
-   Cart
+   Cart Settings (Preserved and fixed from File 1)
 ----------------------------------- */
-
 .cart-main {
     margin: 0 auto;
     padding: 1.5em;
@@ -427,20 +366,71 @@ button:active {
     cursor: not-allowed;
 }
 
-.cart-banner-link{
+.cart-banner-link {
     display: flex;
     align-items: center;
 }
 
-.cart-banner-link a{
+.cart-banner-link a {
     color: var(--color-accent);
 }
 
-.cart-banner-link a:hover{
+.cart-banner-link a:hover {
     text-decoration: none;
 }
 
-.cart-banner-link img{
+.cart-banner-link img {
     max-width: 1em;
-    margin-right: .3em;
+}
+
+/* -----------------------------------
+   Media Queries
+----------------------------------- */
+@media (max-width: 768px) {
+    .header-menu {
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        background-color: var(--color-bg-lightest);
+        padding: var(--space-md);
+        position: absolute;
+        top: 100%;
+        right: 0;
+        z-index: 10;
+        border-left: 2px solid var(--color-accent);
+        border-bottom: 2px solid var(--color-accent);
+        min-height: 100vh;
+        gap: 1em;
+    }
+
+    .header-menu.open {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block; /* Works for text structures and SVGs */
+        cursor: pointer;
+        background-color: transparent;
+        border: none;
+        color: white;
+        align-self: center;
+        font-size: 2em; /* Falls back nicely if string character is loaded instead of image */
+    }
+
+    .menu-toggle img {
+      display: block; 
+    }
+
+    .top-banner input {
+        margin-left: 0;
+        padding: var(--space-sm);
+    }
+
+    .products {
+        padding: 0 var(--space-md);
+    }
+
+    header {
+        padding: var(--space-md);
+    }
 }
