@@ -77,4 +77,17 @@ async function surpriseMe() {
   const randomIndex = Math.floor(Math.random() * allProducts.length);
   const pick = allProducts[randomIndex];
 
-  
+  document.getElementById("surprise-card").innerHTML = `
+    <div class="surprise-pick">
+      <p>🎲 You might also like:</p>
+      <img src="/images/${pick.image}" alt="${pick.title} album cover">
+      <h3>${pick.title}</h3>
+      <h4>${pick.artist}</h4>
+      <button id="dismiss-surprise">✕ Dismiss</button>
+    </div>
+  `;
+
+  document.getElementById("dismiss-surprise").addEventListener("click", () => {
+    document.getElementById("surprise-card").innerHTML = "";
+  });
+}
