@@ -5,7 +5,7 @@ import { getProducts } from "./productService.js";
 export function renderProducts(products) {
   lastRenderedProducts.splice(0, lastRenderedProducts.length, ...products);
 
-   const albumsContainer = document.getElementById("products-container");
+  const albumsContainer = document.getElementById("products-container");
   const myCrate = JSON.parse(localStorage.getItem("myCrate")) || [];
 
   const cards = products
@@ -23,3 +23,19 @@ export function renderProducts(products) {
         <button class="main-btn add-btn" data-id="${album.id}" ${buttonDisabled}>${buttonText}</button>
         <p class="genre-label">${album.genre}</p>
       </div>
+
+       `;
+    })
+    .join("");
+
+  albumsContainer.innerHTML = cards;
+  addBtnListeners();
+}
+
+export async function applySearchFilter() {
+  const search = document.getElementById("search-input").value.trim();
+  const filters = {};
+  if (search) filters.search = search;
+  const products = await getProducts(filters);
+  renderProducts(products);
+}
