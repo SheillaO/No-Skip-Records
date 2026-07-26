@@ -1,22 +1,23 @@
-// ===== Fetching products =====
+// Change this line to your live link
+const BACKEND_URL = "https://no-skip-records.onrender.com";
 
 export async function getProducts(filters = {}) {
-  const queryParams = new URLSearchParams(filters)
-  const res = await fetch(`/api/products?${queryParams}`)
-  return await res.json()
+  const queryParams = new URLSearchParams(filters);
+  const res = await fetch(`${BACKEND_URL}/api/products?${queryParams}`);
+  return await res.json();
 }
 
-// ===== Populate the genre dropdown =====
-
 export async function populateGenreSelect() {
-  const res = await fetch('/api/products/genres')
-  const genres = await res.json() // expects an array of genres as strings: ['rock', 'pop', ...]
-  const select = document.getElementById('genre-select')
+  const res = await fetch(`${BACKEND_URL}/api/products/genres`);
+  const genres = await res.json();
+  const select = document.getElementById("genre-select");
 
-  genres.forEach(genre => {
-    const option = document.createElement('option')
-    option.value = genre
-    option.textContent = genre
-    select.appendChild(option)
-  })
+  if (select) {
+    genres.forEach((genre) => {
+      const option = document.createElement("option");
+      option.value = genre;
+      option.textContent = genre;
+      select.appendChild(option);
+    });
+  }
 }
