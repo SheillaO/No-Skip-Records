@@ -28,20 +28,26 @@ export function addBtnListeners() {
 
 export async function updateCartIcon() {
   try {
-    const res = await fetch(`${BACKEND_URL}/api/cart/count`, {
+    const res = await fetch(`${BACKEND_URL}/api/cart/cart-count`, {
       credentials: "include",
     });
-    const data = await res.json();
-    const totalItems = data.totalItems;
+    const obj = await res.json();
+    const totalItems = obj.totalItems;
 
-    document.getElementById("cart-banner").innerHTML =
-      totalItems > 0
-        ? `<a href="/cart.html"><img src="images/cart.png" alt="cart">${totalItems}</a>`
-        : "";
+    const cartBanner = document.getElementById("cart-banner");
+
+    // 🔥 FIXED: Ensures the script safely checks if the cart badge wrapper element exists on the active page DOM
+    if (cartBanner) {
+      cartBanner.innerHTML =
+        totalItems > 0
+          ? `<a href="/cart.html" class="cart-banner-link"><img src="images/cart.png" alt="cart"> Basket (${totalItems})</a>`
+          : "";
+    }
   } catch (err) {
     console.error("Error updating cart icon:", err);
   }
 }
+
 
 export async function loadCart(dom) {
   const { checkoutBtn, userMessage, cartList, cartTotal } = dom;
