@@ -4,9 +4,9 @@ import path from 'node:path'
 
 async function createTable() {
   const db = await open({
-    filename: path.join('database.db'),
-    driver: sqlite3.Database
-  })
+    filename: path.join("database.db"),
+    driver: sqlite3.Database,
+  });
 
   await db.exec(`
     CREATE TABLE IF NOT EXISTS products (
@@ -19,9 +19,9 @@ async function createTable() {
       genre TEXT,
       stock INTEGER
     )
-  `)
+  `);
 
-   await db.exec(`
+  await db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -29,7 +29,7 @@ async function createTable() {
       username TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL
     )
-  `)
+  `);
 
   // Cart items table (needed for basket)
   await db.exec(`
@@ -41,4 +41,10 @@ async function createTable() {
       FOREIGN KEY (user_id) REFERENCES users(id),
       FOREIGN KEY (product_id) REFERENCES products(id)
     )
-  `)
+  `);
+
+  await db.close();
+  console.log("All tables created.");
+}
+
+createTable();
