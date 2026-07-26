@@ -13,11 +13,12 @@ const PORT = process.env.PORT || 8000;
 const secret = process.env.SPIRAL_SESSION_SECRET || "jellyfish-baskingshark";
 
 // 3. Enable CORS to securely accept credentials/cookies from your Netlify domain
+// Enable CORS to securely accept credentials/cookies from your Netlify domain
 app.use(
   cors({
-    // ⚠️ REPLACE THIS with your actual live Netlify link (e.g. 'https://netlify.app')
+    // 🔥 FIXED: Set this to your exact live Netlify site URL link without a trailing slash
     origin: "https://noskiprecords.netlify.app/",
-    credentials: true, // Allows cross-domain storage of login sessions
+    credentials: true, // Crucial: Allows cross-domain storage of login sessions
   }),
 );
 
