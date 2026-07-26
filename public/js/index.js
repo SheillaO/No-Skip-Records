@@ -65,4 +65,16 @@ function fisherYatesShuffle(array) {
   return shuffled;
 }
 
+document.getElementById("shuffle-btn").addEventListener("click", () => {
+  const shuffled = fisherYatesShuffle(lastRenderedProducts);
+  renderProducts(shuffled);
+});
 
+// 🎲 Surprise Me — only appears when you ask, never automatically
+async function surpriseMe() {
+  const allProducts = await getProducts();
+  if (!allProducts || allProducts.length === 0) return;
+  const randomIndex = Math.floor(Math.random() * allProducts.length);
+  const pick = allProducts[randomIndex];
+
+  
