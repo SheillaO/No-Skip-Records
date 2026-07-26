@@ -4,20 +4,16 @@ export function addBtnListeners() {
   document.querySelectorAll(".add-btn").forEach((button) => {
     button.addEventListener("click", async (event) => {
       const albumId = event.currentTarget.dataset.id;
-
       try {
-        // 🔄 CHANGED LINE: Points your fetch directly to your live database server string
         const res = await fetch(`${BACKEND_URL}/api/cart/add`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify({ productId: albumId }),
         });
-
         if (!res.ok) {
           return (window.location.href = "/login.html");
         }
-
         await updateCartIcon();
       } catch (err) {
         console.error("Error adding to cart:", err);
@@ -33,10 +29,7 @@ export async function updateCartIcon() {
     });
     const obj = await res.json();
     const totalItems = obj.totalItems;
-
     const cartBanner = document.getElementById("cart-banner");
-
-    // 🔥 FIXED: Ensures the script safely checks if the cart badge wrapper element exists on the active page DOM
     if (cartBanner) {
       cartBanner.innerHTML =
         totalItems > 0
@@ -48,10 +41,8 @@ export async function updateCartIcon() {
   }
 }
 
-
 export async function loadCart(dom) {
   const { checkoutBtn, userMessage, cartList, cartTotal } = dom;
-
   try {
     const items = await fetchCartItems(dom);
     renderCartItems(items, cartList);
@@ -63,7 +54,10 @@ export async function loadCart(dom) {
 }
 
 async function fetchCartItems({ userMessage, checkoutBtn }) {
-  const res = await fetch("/api/cart/", { credentials: "include" });
+  // FIXED: was "/api/cart/" (relative) — broken from Netlify to Render
+  const res = await fetch(`${BACKEND_URL}/api/cart/`, {
+    credentials: "include",
+  });
 
   if (!res.ok) {
     window.location.href = "/";
@@ -79,13 +73,10 @@ async function fetchCartItems({ userMessage, checkoutBtn }) {
 
 function renderCartItems(items, cartList) {
   cartList.innerHTML = "";
-
   items.forEach((item) => {
     const li = document.createElement("li");
     li.className = "cart-item";
-
     const itemTotal = item.price * item.quantity;
-
     li.innerHTML = `
       <div>
         <strong>${item.title}: </strong>
@@ -93,7 +84,6 @@ function renderCartItems(items, cartList) {
       </div>
       <span>× ${item.quantity} = $${itemTotal.toFixed(2)}</span>
     `;
-
     cartList.appendChild(li);
   });
 }
@@ -104,7 +94,6 @@ function updateCartTotal(items, cartTotal, checkoutBtn) {
     0,
   );
   cartTotal.innerHTML = `Total: $${total.toFixed(2)}`;
-
   if (total <= 0) {
     checkoutBtn.disabled = true;
     checkoutBtn.classList.add("disabled");
@@ -113,11 +102,11 @@ function updateCartTotal(items, cartTotal, checkoutBtn) {
 
 export async function removeItem(itemId, dom) {
   try {
-    const res = await fetch(`/api/cart/${itemId}`, {
+    // FIXED: was "/api/cart/${itemId}" (relative) — broken from Netlify to Render
+    const res = await fetch(`${BACKEND_URL}/api/cart/${itemId}`, {
       method: "DELETE",
       credentials: "include",
     });
-
     if (res.status === 204) {
       await loadCart(dom);
     } else {
@@ -130,11 +119,11 @@ export async function removeItem(itemId, dom) {
 
 export async function removeAll(dom) {
   try {
-    const res = await fetch(`/api/cart/all`, {
+    // FIXED: was "/api/cart/all" (relative) — broken from Netlify to Render
+    const res = await fetch(`${BACKEND_URL}/api/cart/all`, {
       method: "DELETE",
       credentials: "include",
     });
-
     if (res.status === 204) {
       await loadCart(dom);
     } else {
