@@ -1,8 +1,11 @@
 import { addBtnListeners } from './cartService.js'
 
-// ===== Rendering products =====
+import { lastRenderedProducts } from "./index.js";
 
 export function renderProducts(products) {
+  // NEW: remember what's currently shown by overwriting the tracker array properties
+  lastRenderedProducts.splice(0, lastRenderedProducts.length, ...products);
+ 
   const albumsContainer = document.getElementById('products-container')
   const cards = products.map((album) => {
     return `

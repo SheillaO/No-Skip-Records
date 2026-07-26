@@ -59,7 +59,7 @@ h1 {
 
 h2 {
     font-size: 1.2rem;
-    padding: var(--space-xs); /* Kept from File 2 */
+    padding: var(--space-xs);
 }
 
 h3 {
@@ -120,7 +120,7 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-lg); /* Merged the deeper padding strategy from File 2 */
+    padding: var(--space-lg);
     gap: var(--space-md);
     margin-bottom: 0;
 }
@@ -135,7 +135,7 @@ footer {
     gap: 1em;
     padding: var(--space-sm) var(--space-md);
     background-color: var(--color-bg-lightest);
-    position: sticky; /* Sticky layout is preferred for user navigation scroll */
+    position: sticky;
     top: 0;
     z-index: 10;
 }
@@ -204,7 +204,6 @@ footer {
     border-radius: var(--radius-md);
 }
 
-/* Kept both naming variants identically so HTML 1 and HTML 2 button themes function */
 .main-btn, 
 .add-btn {
     padding: 0.8em 1.5em;
@@ -270,7 +269,7 @@ button:active {
 }
 
 /* -----------------------------------
-   Sign in/up forms (Preserved from File 1)
+   Sign in/up forms
 ----------------------------------- */
 .sign-forms {
     display: flex;
@@ -325,7 +324,7 @@ button:active {
 }
 
 /* -----------------------------------
-   Cart Settings (Preserved and fixed from File 1)
+   Cart Settings
 ----------------------------------- */
 .cart-main {
     margin: 0 auto;
@@ -408,13 +407,13 @@ button:active {
     }
 
     .menu-toggle {
-        display: block; /* Works for text structures and SVGs */
+        display: block;
         cursor: pointer;
         background-color: transparent;
         border: none;
         color: white;
         align-self: center;
-        font-size: 2em; /* Falls back nicely if string character is loaded instead of image */
+        font-size: 2em;
     }
 
     .menu-toggle img {
@@ -433,4 +432,35 @@ button:active {
     header {
         padding: var(--space-md);
     }
+}
+
+/* -----------------------------------
+   Platform Correction Feature Rules
+----------------------------------- */
+#shuffle-btn, #surprise-btn {
+    padding: 0.5em 1em;
+    background-color: var(--color-bg-lightest);
+    color: var(--color-text);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+}
+
+#shuffle-btn:hover, #surprise-btn:hover {
+    background-color: var(--color-accent);
+    color: black;
+}
+
+.surprise-pick {
+    max-width: 250px;
+    margin: 1em auto;
+    padding: var(--space-md);
+    background-color: var(--color-bg-lightest);
+    border-radius: var(--radius-lg);
+    text-align: center;
+}
+
+.surprise-pick img {
+    width: 100%;
+    border-radius: var(--radius-md);
 }

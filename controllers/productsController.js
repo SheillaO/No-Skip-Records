@@ -25,20 +25,17 @@ export async function getProducts(req, res) {
 
     const { genre, search } = req.query;
 
-    // 1. Handle Genre filter
     if (genre) {
       conditions.push("genre = ?");
       params.push(genre);
     }
 
-    // 2. Handle Search filter
     if (search) {
       conditions.push("(title LIKE ? OR artist LIKE ? OR genre LIKE ?)");
       const searchPattern = `%${search}%`;
       params.push(searchPattern, searchPattern, searchPattern);
     }
 
-    // 3. Dynamically build the WHERE clause if filters exist
     if (conditions.length > 0) {
       query += " WHERE " + conditions.join(" AND ");
     }

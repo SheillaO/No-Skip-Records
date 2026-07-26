@@ -13,6 +13,7 @@
 </head>
 
 <body>
+  <!-- Advanced Top Banner Configuration -->
   <div class="top-banner" id="top-banner">
     <p id="greeting" class="top-banner-greeting"></p>
     <a href="/cart.html" id="cart-banner" class="cart-banner-link"></a>
@@ -25,9 +26,10 @@
         <label for="search-input" class="visually-hidden">Search products</label>
         <input type="text" placeholder="Search..." id="search-input" autocomplete="off">
       </form>
-    </nav> 
+    </nav>
   </div>
 
+  <!-- Clickable Header Logo & Branding -->
   <header>
     <a href="/"><img src="/images/spiral_logo.png" alt="Spiral Sounds Logo"></a>
     <div class="header-text">
@@ -35,16 +37,33 @@
       <p class="subhead">The best in vinyl</p>
     </div>
   </header>
+
+  <!-- Filters & Shuffle Controls -->
   <section class="genre-select-container">
     <label for="genre-select">View by genre</label>
     <select id="genre-select">
       <option value="">Show All</option>
     </select>
+    <!-- Feature 1: True Shuffle Button -->
+    <button id="shuffle-btn" class="main-btn"
+      title="Real Fisher-Yates randomness — the exact algorithm Spotify retired in 2014">🔀 True Shuffle</button>
   </section>
+
+  <!-- Feature 2: Surprise Me Section -->
+  <div style="text-align: center; margin: var(--space-md) 0;">
+    <button id="surprise-btn" class="main-btn"
+      title="Unlike Spotify's Smart Shuffle, nothing is ever added without you asking">🎲 Surprise Me</button>
+    <div id="surprise-card"></div>
+  </div>
+
+  <!-- Primary Dynamic Storefront Container -->
   <main class="products" id="products-container"></main>
+
   <footer>
     <p>© Spiral Sounds</p>
   </footer>
+
+  <!-- Modular Scripts Configuration -->
   <script src="js/index.js" type="module"></script>
   <script src="js/menu.js" type="module"></script>
 </body>

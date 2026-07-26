@@ -1,25 +1,35 @@
-import { getDBConnection } from './db/db.js'
+import { getDBConnection } from "./db/db.js";
 
-async function logTable() {
-  const db = await getDBConnection()
+// --- CONFIGURATION ---
+// 1. Choose your table: 'cart_items', 'products', or 'users'
+const tableName = "products";
 
-  const tableName = 'cart_items'
-  // const tableName = 'products'
-  // const tableName = 'users'
+// 2. Set to true if you want the custom filtered column view for the products table
+const useNeaterProductDisplay = true;
+// ---------------------
+
+async function debugDatabaseTable() {
+  const db = await getDBConnection();
 
   try {
-    const table = await db.all(`SELECT * FROM ${tableName}`)
-    console.table(table)
+    // Dynamically fetches data from the chosen table
+    const rows = await db.all(`SELECT * FROM ${tableName}`);
 
+    // If viewing products with the neater view enabled, slice out only specific columns
+    if (tableName === "products" && useNeaterProductDisplay) {
+      const displayItems = rows.map(({ id, title, artist, year, stock }) => {
+        return { id, title, artist, year, stock };
+      });
+      console.table(displayItems);
+    } else {
+      // Default: Logs every single column from the table
+      console.table(rows);
+    }
   } catch (err) {
-
-    console.error('Error fetching table:', err.message)
-
+    console.error(`Error fetching table "${tableName}":`, err.message);
   } finally {
-
-    await db.close()
-
+    await db.close();
   }
 }
 
-logTable()
+debugDatabaseTable();
