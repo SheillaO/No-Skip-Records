@@ -1,37 +1,46 @@
-// ===== Check if user is signed in =====
+const BACKEND_URL = "https://no-skip-records.onrender.com";
+
 export async function checkAuth() {
   try {
-    const res = await fetch('/api/auth/me')
+    // 🔄 CHANGED: Added BACKEND_URL prefix and cross-domain login credentials hook
+    const res = await fetch(`${BACKEND_URL}/api/auth/me`, {
+      credentials: "include",
+    });
 
     if (!res.ok) {
-      console.warn('Unexpected response:', res.status)
-      return false
-    } 
-  
-    const user = await res.json()
-    if (!user.isLoggedIn) {
-      return false
+      console.warn("Unexpected response:", res.status);
+      return false;
     }
-    return user.name
 
+    const user = await res.json();
+    if (!user.isLoggedIn) {
+      return false;
+    }
+    return user.name;
   } catch (err) {
-    console.log(err, 'Auth check failed')
-    return false 
+    console.log(err, "Auth check failed");
+    return false;
   }
 }
 
 // ===== Greet user or guest =====
 
 export function renderGreeting(name) {
-  const user = name ? name : 'Guest'
-  document.getElementById('greeting').textContent = `Welcome, ${user}!`
+  const user = name ? name : "Guest";
+  document.getElementById("greeting").textContent = `Welcome, ${user}!`;
 }
 
 // ===== Only display logout button if logged in, else display log in/sign in options =====
 
 export function showHideMenuItems(name) {
-  const isLoggedIn = name
-  document.getElementById('login').style.display = isLoggedIn ? 'none' : 'inline'
-  document.getElementById('signup').style.display = isLoggedIn ? 'none' : 'inline'
-  document.getElementById('logout-btn').style.display = isLoggedIn ? 'inline' : 'none'
+  const isLoggedIn = name;
+  document.getElementById("login").style.display = isLoggedIn
+    ? "none"
+    : "inline";
+  document.getElementById("signup").style.display = isLoggedIn
+    ? "none"
+    : "inline";
+  document.getElementById("logout-btn").style.display = isLoggedIn
+    ? "inline"
+    : "none";
 }

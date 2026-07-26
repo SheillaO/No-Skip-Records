@@ -6,7 +6,8 @@ export function addBtnListeners() {
       const albumId = event.currentTarget.dataset.id;
 
       try {
-        const res = await fetch("/api/cart/add", {
+        // 🔄 CHANGED LINE: Points your fetch directly to your live database server string
+        const res = await fetch(`${BACKEND_URL}/api/cart/add`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
