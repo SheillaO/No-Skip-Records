@@ -1,0 +1,68 @@
+export async function initializePayment(req, res) {
+  const { email, amount } = req.body;
+
+  // Basic guard — amount comes from the frontend but we validate it here
+  if (!email || !amount || amount <= 0) {
+    return res
+      .status(400)
+      .json({ error: "Email and a valid amount are required." });
+  }
+
+  try {
+    // Call Paystack to create a payment session
+    const response = await fetch(
+      "https://api.paystack.co/transaction/initialize",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          amount: Math.round(amount * 100), // Paystack works in kobo/cents
+          currency: "USD",
+          callback_url: `${req.protocol}://${req.get("host")}/success.html`,
+        }),
+      },
+    );
+
+    const data = await response.json();
+
+    if (!data.status) {
+      return res.status(500).json({ error: "Payment initialization failed." });
+    }
+
+    // Return the reference and authorization URL to the frontend
+    res.json({
+      reference: data.data.reference,
+      authorizationUrl: data.data.authorization_url,
+    });
+  } catch (err) {
+    console.error("Payment init error:", err.message);
+    res.status(500).json({ error: "Something went wrong. Please try again." });
+  }
+}
+
+export async function verifyPayment(req, res) {
+  const { reference } = req.params
+
+  if (!reference) {
+    return res.status(400).json({ error: 'Reference is required.' })
+  }
+
+  try {
+    // Ask Paystack if this payment actually went through
+    const response = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`
+      }
+    })
+
+    const data = await response.json()
+
+    if (!data.status || data.data.status !== 'success') {
+      return res.status(400).json({ error: 'Payment not verified.' })
+    }
+
+    
