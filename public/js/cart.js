@@ -9,23 +9,36 @@ const dom = {
   cartTotal: document.getElementById('cart-total')
 }
 
-document.getElementById('logout-btn').addEventListener('click', logout)
+// Global authorization event binding
+const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', logout);
+}
 
-dom.cartList.addEventListener('click', event => {
-  if (event.target.matches('.remove-btn')) {
-    removeItem(event.target.dataset.id, dom)
-  }
-})
+// Dynamic item deletion listener assignment
+if (dom.cartList) {
+  dom.cartList.addEventListener('click', event => {
+    if (event.target.matches('.remove-btn')) {
+      removeItem(event.target.dataset.id, dom)
+    }
+  })
+}
 
-dom.checkoutBtn.addEventListener('click', () => {
-  removeAll(dom)
-  dom.userMessage.textContent = 'Your order has been sent for processing.'
-  dom.checkoutBtn.classList.add('visually-hidden')
-  dom.cartTotal.classList.add('visually-hidden')
-})
+// Platform correction check-out processing module
+if (dom.checkoutBtn) {
+  dom.checkoutBtn.addEventListener('click', () => {
+    removeAll(dom)
+    if (dom.userMessage) dom.userMessage.textContent = 'Your order has been sent for processing.'
+    if (dom.checkoutBtn) dom.checkoutBtn.classList.add('visually-hidden')
+    if (dom.cartTotal) dom.cartTotal.classList.add('visually-hidden')
+  })
+}
 
+// Page execution lifecycle bootstrapper
 async function init() {
-  loadCart(dom)
+  if (dom.cartList) {
+    await loadCart(dom)
+  }
   const name = await checkAuth()
   renderGreeting(name)
   showHideMenuItems(name)
