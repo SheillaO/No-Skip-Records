@@ -31,3 +31,17 @@ async function init() {
 }
 
 init();
+
+document.getElementById("search-input").addEventListener("input", (e) => {
+  e.preventDefault();
+  applySearchFilter();
+});
+
+document.getElementById("search-input").addEventListener("submit", (e) => {
+  e.preventDefault();
+});
+
+document.querySelector("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  applySearchFilter();
+});
