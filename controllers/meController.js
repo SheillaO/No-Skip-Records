@@ -8,7 +8,7 @@ export async function getCurrentUser(req, res) {
       return res.json({ isLoggedIn: false });
     }
 
-    const user = await db.get("SELECT name FROM users WHERE id = ?", [
+    const user = await db.get("SELECT name, email FROM users WHERE id = ?", [
       req.session.userId,
     ]);
 
@@ -16,7 +16,11 @@ export async function getCurrentUser(req, res) {
       return res.json({ isLoggedIn: false });
     }
 
-    return res.json({ isLoggedIn: true, name: user.name });
+    return res.json({
+      isLoggedIn: true,
+      name: user.name,
+      email: user.email,
+    });
   } catch (err) {
     console.error("getCurrentUser error:", err.message);
     return res.status(500).json({ error: "Internal server error" });
