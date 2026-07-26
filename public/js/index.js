@@ -91,3 +91,19 @@ async function surpriseMe() {
     document.getElementById("surprise-card").innerHTML = "";
   });
 }
+
+document.getElementById("surprise-btn").addEventListener("click", surpriseMe);
+
+// 🛒 My Crate — localStorage ownership (nothing here gets bricked)
+document.getElementById("products-container").addEventListener("click", (e) => {
+  if (e.target.classList.contains("add-btn")) {
+    const id = e.target.dataset.id;
+    let myCrate = JSON.parse(localStorage.getItem("myCrate")) || [];
+    if (!myCrate.includes(id)) {
+      myCrate.push(id);
+      localStorage.setItem("myCrate", JSON.stringify(myCrate));
+      e.target.textContent = "✓ In Your Crate, Forever";
+      e.target.disabled = true;
+    }
+  }
+});
