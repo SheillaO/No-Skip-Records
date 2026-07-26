@@ -1,6 +1,6 @@
 import express from "express";
 import session from "express-session";
-import cors from "cors"; // 1. Imported the CORS management middleware
+import cors from "cors";
 import { productsRouter } from "./routes/products.js";
 import { authRouter } from "./routes/auth.js";
 import { meRouter } from "./routes/me.js";
@@ -8,22 +8,26 @@ import { cartRouter } from "./routes/cart.js";
 
 const app = express();
 
-// 2. Updated PORT to use Render's system variable, falling back to 8000 locally
 const PORT = process.env.PORT || 8000;
 const secret = process.env.SPIRAL_SESSION_SECRET || "jellyfish-baskingshark";
 
-// 3. Enable CORS to securely accept credentials/cookies from your Netlify domain
 // Enable CORS to securely accept credentials/cookies from your Netlify domain
 app.use(
   cors({
-    // 🔥 FIXED: Set this to your exact live Netlify site URL link without a trailing slash
-    origin: "https://noskiprecords.netlify.app/",
-    credentials: true, // Crucial: Allows cross-domain storage of login sessions
+    // FIXED: Removed the trailing slash from the link to prevent CORS connection rejections
+    origin: "https://noskiprecords.netlify.app",
+    credentials: true,
   }),
 );
 
 // Parsing middleware (Allows server to read JSON bodies sent by frontend)
 app.use(express.json());
+
+// =========================================================================
+// 🔒 COOKIE HANDSHAKE OPTIMIZATION MODULE (RENDER REVERSE PROXY RULES)
+// =========================================================================
+// Trust Render's reverse proxy setup for cross-domain cookie handshakes
+app.set("trust proxy", 1);
 
 // 4. Session middleware configuration optimized for multi-platform hosting
 app.use(
@@ -38,6 +42,7 @@ app.use(
     },
   }),
 );
+// =========================================================================
 
 // Static asset delivery (Acts as local backup when working on your machine)
 app.use(express.static("public"));
