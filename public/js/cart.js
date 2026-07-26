@@ -2,7 +2,9 @@ import { logout } from "./logout.js";
 import { checkAuth, renderGreeting, showHideMenuItems } from "./authUI.js";
 import { loadCart, removeItem, removeAll } from "./cartService.js";
 
-// Cache elements safely
+// All API calls must use absolute URL to reach Render from Netlify
+const BACKEND_URL = "https://no-skip-records.onrender.com";
+
 const checkoutBtn = document.getElementById("checkout-btn");
 const userMessage = document.getElementById("user-message");
 const cartList = document.getElementById("cart-list");
@@ -10,13 +12,11 @@ const cartTotal = document.getElementById("cart-total");
 
 const dom = { checkoutBtn, userMessage, cartList, cartTotal };
 
-// ===== Global Element Event Listeners =====
 const logoutBtn = document.getElementById("logout-btn");
 if (logoutBtn) {
   logoutBtn.addEventListener("click", logout);
 }
 
-// 🔥 FIXED: Only binds the click listener if the cart list wrapper is present on screen
 if (dom.cartList) {
   dom.cartList.addEventListener("click", (event) => {
     if (event.target.matches(".remove-btn")) {
@@ -25,12 +25,13 @@ if (dom.cartList) {
   });
 }
 
-// 🔥 FIXED: Only processes checkout mechanics if the button exists on the current page DOM context
 if (dom.checkoutBtn) {
   dom.checkoutBtn.addEventListener("click", async () => {
     try {
-      // Get current user's email so Paystack can send a receipt
-      const meRes = await fetch("/api/auth/me");
+      // FIXED: was "/api/auth/me" (relative) — broken from Netlify to Render
+      const meRes = await fetch(`${BACKEND_URL}/api/auth/me`, {
+        credentials: "include",
+      });
       const me = await meRes.json();
 
       if (!me.isLoggedIn) {
@@ -38,7 +39,6 @@ if (dom.checkoutBtn) {
         return;
       }
 
-      // Get total safely from the cart total paragraph text e.g. "Total: $45.97"
       const totalText = dom.cartTotal ? dom.cartTotal.textContent : "";
       const amount = parseFloat(totalText.replace(/[^0-9.]/g, ""));
 
@@ -48,8 +48,8 @@ if (dom.checkoutBtn) {
         return;
       }
 
-      // Tell our backend to start a Paystack session
-      const initRes = await fetch("/api/payments/initialize", {
+      // FIXED: was "/api/payments/initialize" (relative) — broken from Netlify to Render
+      const initRes = await fetch(`${BACKEND_URL}/api/payments/initialize`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -58,27 +58,23 @@ if (dom.checkoutBtn) {
 
       const { reference } = await initRes.json();
 
-      // Open Paystack's popup
-      // Test card: 4084084084084081, any future date, any CVV
+      // ⚠️ REPLACE "YOUR_PK_HERE" with your pk_test_... key from Paystack dashboard
+      // Go to: paystack.com → Settings → API Keys → copy Test Public Key (starts with pk_test_)
       const handler = PaystackPop.setup({
-        key: "pk_test_your_public_key_here", // ← replace with your actual test public key
+        key: "sk_test_f53df2b94af991873f96fe317e60a6b8eb620b40",
         email: me.email,
         amount: Math.round(amount * 100),
         currency: "USD",
         ref: reference,
 
         callback: async function (response) {
-          // Payment completed — verify it on the backend
           const verifyRes = await fetch(
-            `/api/payments/verify/${response.reference}`,
-            {
-              credentials: "include",
-            },
+            `${BACKEND_URL}/api/payments/verify/${response.reference}`,
+            { credentials: "include" },
           );
           const result = await verifyRes.json();
 
           if (result.success) {
-            // Clear the cart and show success
             await removeAll(dom);
             if (dom.userMessage)
               dom.userMessage.textContent =
@@ -94,7 +90,6 @@ if (dom.checkoutBtn) {
         },
 
         onClose: function () {
-          // User closed the popup without paying
           if (dom.userMessage)
             dom.userMessage.textContent =
               "Payment cancelled. Your cart is still saved.";
@@ -110,13 +105,10 @@ if (dom.checkoutBtn) {
   });
 }
 
-// ===== Execution Lifecycle Initialization =====
 async function init() {
-  // 🔥 FIXED: Only executes the backend items database pull if looking at the active cart list view container
   if (dom.cartList) {
-    await loadCart(dom); // Kept the "await" keyword from file 1 to ensure lifecycle order
+    await loadCart(dom);
   }
-
   const name = await checkAuth();
   renderGreeting(name);
   showHideMenuItems(name);
