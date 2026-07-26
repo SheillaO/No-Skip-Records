@@ -28,3 +28,19 @@
       <p class="subhead">The needle never skips. Neither do we.</p>
     </div>
   </header>
+
+    <main class="sign-forms">
+      <form class="sign-form" id="signin-form" autocomplete="off">
+        <div class="form-inner">
+          <h2>Welcome back!</h2>
+          <label for="signin-username">Username</label>
+          <input type="text" id="signin-username" name="username" required pattern="^[a-zA-Z0-9_\-]{1,20}$"
+            title="Username must be 1–20 characters using letters, numbers, _ or -." />
+          <label for="signin-password">Password</label>
+          <input type="password" id="signin-password" name="password" required />
+          <button type="submit" class="form-btn">Log In</button>
+          <p>No account? <a href="/signup.html" class="sign-link">Sign up here</a>.</p>
+          <p id="error-message" class="error"></p>
+        </div>
+      </form>
+    </main>
