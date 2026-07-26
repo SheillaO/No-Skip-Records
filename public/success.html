@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+    <title>Order Confirmed — Spiral Sounds</title>
+</head>
+
+<body>
+    <header>
+        <a href="/"><img src="/images/spiral_logo.png" alt="Spiral Sounds Logo"></a>
+        <div class="header-text">
+            <h1>Spiral Sounds</h1>
+            <p class="subhead">The best in vinyl</p>
+        </div>
+    </header>
+
+    <main class="sign-forms">
+        <div class="sign-form">
+            <div class="form-inner">
+                <h2>✅ Order Confirmed</h2>
+                <p id="success-message">Your payment went through. Your records are on their way.</p>
+                <p id="payment-details"></p>
+                <a href="/" class="form-btn" style="text-align:center; display:block; margin-top:1rem;">
+                    Keep Shopping
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© Spiral Sounds</p>
+    </footer>
+
+    <script type="module">
+        // Verify the payment reference from the URL query string
+        const params = new URLSearchParams(window.location.search)
+        const reference = params.get('reference') || params.get('trxref')
+
+        if (reference) {
+            fetch(`/api/payments/verify/${reference}`, { credentials: 'include' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('payment-details').textContent =
+                            `Amount paid: $${data.amount} · Receipt sent to ${data.email}`
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('success-message').textContent =
+                        'Payment received. We could not load the details but your order is confirmed.'
+                })
+        }
+    </script>
+</body>
+
+</html>
