@@ -5,15 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/index.css">
-    <title>Order Confirmed — Spiral Sounds</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plaster&family=Poppins:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <title>No Skip Records — Order Confirmed</title>
 </head>
 
 <body>
     <header>
-        <a href="/"><img src="/images/spiral_logo.png" alt="Spiral Sounds Logo"></a>
+        <a href="/"><img src="/images/spiral_logo.png" alt="No Skip Records Logo"></a>
         <div class="header-text">
-            <h1>Spiral Sounds</h1>
-            <p class="subhead">The best in vinyl</p>
+            <h1>No Skip Records</h1>
+            <p class="subhead">The needle never skips. Neither do we.</p>
         </div>
     </header>
 
@@ -31,27 +35,29 @@
     </main>
 
     <footer>
-        <p>© Spiral Sounds</p>
+        <p>© No Skip Records — built by <a href="https://github.com/SheillaO" target="_blank"
+                rel="noopener noreferrer">Sheilla O.</a></p>
     </footer>
 
     <script type="module">
-        // Verify the payment reference from the URL query string
-        const params = new URLSearchParams(window.location.search)
-        const reference = params.get('reference') || params.get('trxref')
+        const BACKEND_URL = "https://no-skip-records.onrender.com";
+        const params = new URLSearchParams(window.location.search);
+        const reference = params.get("reference") || params.get("trxref");
 
         if (reference) {
-            fetch(`/api/payments/verify/${reference}`, { credentials: 'include' })
+            // FIXED: uses absolute URL so verify works from Netlify → Render
+            fetch(`${BACKEND_URL}/api/payments/verify/${reference}`, { credentials: "include" })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById('payment-details').textContent =
-                            `Amount paid: $${data.amount} · Receipt sent to ${data.email}`
+                        document.getElementById("payment-details").textContent =
+                            `Amount paid: $${data.amount} · Receipt sent to ${data.email}`;
                     }
                 })
                 .catch(() => {
-                    document.getElementById('success-message').textContent =
-                        'Payment received. We could not load the details but your order is confirmed.'
-                })
+                    document.getElementById("success-message").textContent =
+                        "Payment received. We could not load the details but your order is confirmed.";
+                });
         }
     </script>
 </body>
