@@ -17,4 +17,17 @@ if (toggle && menu) {
   });
 }
 
+async function init() {
+  populateGenreSelect();
+  const products = await getProducts();
+  lastRenderedProducts = products;
+  renderProducts(products);
+  const name = await checkAuth();
+  renderGreeting(name);
+  showHideMenuItems(name);
+  if (name) {
+    await updateCartIcon();
+  }
+}
 
+init();
