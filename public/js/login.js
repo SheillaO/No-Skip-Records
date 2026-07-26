@@ -1,37 +1,43 @@
-const signinForm = document.getElementById('signin-form')
-const errorMessage = document.getElementById('error-message')
+// ===== Configuration =====
+// Directs your login form credentials to your live Render database engine
+const BACKEND_URL = "https://no-skip-records.onrender.com";
 
-signinForm.addEventListener('submit', async (e) => {
-  e.preventDefault() // Prevent form from reloading the page
+const signinForm = document.getElementById("signin-form");
+const errorMessage = document.getElementById("error-message");
 
-  const username = document.getElementById('signin-username').value.trim()
-  const password = document.getElementById('signin-password').value.trim()
-  const submitBtn = signinForm.querySelector('button')
+signinForm.addEventListener("submit", async (e) => {
+  e.preventDefault(); // Prevent form from reloading the page
 
-  errorMessage.textContent = '' // Clear old error messages
-  submitBtn.disabled = true
+  const username = document.getElementById("signin-username").value.trim();
+  const password = document.getElementById("signin-password").value.trim();
+  const submitBtn = signinForm.querySelector("button");
+
+  errorMessage.textContent = ""; // Clear old error messages
+  submitBtn.disabled = true;
 
   try {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
+    // 🔄 FIXED: Point the fetch URL to your live, absolute Render backend address
+    const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      credentials: 'include', 
-      body: JSON.stringify({ username, password })
-    })
+      credentials: "include", // Kept intact: Essential for sending your login cookie to Render
+      body: JSON.stringify({ username, password }),
+    });
 
-    const data = await res.json()
+    const data = await res.json();
 
-    if (res.ok) { 
-      window.location.href = '/'
+    if (res.ok) {
+      window.location.href = "/";
     } else {
-      errorMessage.textContent = data.error || 'Login failed. Please try again.'
+      errorMessage.textContent =
+        data.error || "Login failed. Please try again.";
     }
   } catch (err) {
-    console.error('Network error:', err)
-    errorMessage.textContent = 'Unable to connect. Please try again.'
+    console.error("Network error:", err);
+    errorMessage.textContent = "Unable to connect. Please try again.";
   } finally {
-    submitBtn.disabled = false
+    submitBtn.disabled = false;
   }
-})
+});

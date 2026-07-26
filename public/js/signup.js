@@ -1,38 +1,45 @@
-const signupForm = document.getElementById('signup-form')
-const errorMessage = document.getElementById('error-message') 
+// ===== Configuration Configuration =====
+// Routes new user registrations straight to your active live Render database server
+const BACKEND_URL = "https://no-skip-records.onrender.com";
 
-signupForm.addEventListener('submit', async (e) => {
-  e.preventDefault() // Prevent form from reloading
+const signupForm = document.getElementById("signup-form");
+const errorMessage = document.getElementById("error-message");
 
-  const name = document.getElementById('signup-name').value.trim()
-  const email = document.getElementById('signup-email').value.trim()
-  const username = document.getElementById('signup-username').value.trim()
-  const password = document.getElementById('signup-password').value.trim()
-  const submitBtn = signupForm.querySelector('button')
+signupForm.addEventListener("submit", async (e) => {
+  e.preventDefault(); // Prevent form from reloading
 
-  errorMessage.textContent = '' // Clear old errors
-  submitBtn.disabled = true
+  const name = document.getElementById("signup-name").value.trim();
+  const email = document.getElementById("signup-email").value.trim();
+  const username = document.getElementById("signup-username").value.trim();
+  const password = document.getElementById("signup-password").value.trim();
+  const submitBtn = signupForm.querySelector("button");
+
+  errorMessage.textContent = ""; // Clear old errors
+  submitBtn.disabled = true;
 
   try {
-    const res = await fetch('api/auth/register', {
-      method: 'POST',
+    // 🔄 FIXED: Pointed to absolute Render address and added cross-domain cookie capabilities
+    const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, email, username, password })
-    })
+      credentials: "include", // 🔥 CRUCIAL: Keeps new user profiles logged in automatically across domains
+      body: JSON.stringify({ name, email, username, password }),
+    });
 
-    const data = await res.json()
+    const data = await res.json();
 
     if (res.ok) {
-      window.location.href = '/'
+      window.location.href = "/";
     } else {
-      errorMessage.textContent = data.error || 'Registration failed. Please try again.'
+      errorMessage.textContent =
+        data.error || "Registration failed. Please try again.";
     }
   } catch (err) {
-    console.error('Network error:', err)
-    errorMessage.textContent = 'Unable to connect. Please try again.'
+    console.error("Network error:", err);
+    errorMessage.textContent = "Unable to connect. Please try again.";
   } finally {
-    submitBtn.disabled = false
+    submitBtn.disabled = false;
   }
-})
+});
