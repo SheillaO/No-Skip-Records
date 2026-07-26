@@ -61,7 +61,7 @@ if (dom.checkoutBtn) {
       // ⚠️ REPLACE "YOUR_PK_HERE" with your pk_test_... key from Paystack dashboard
       // Go to: paystack.com → Settings → API Keys → copy Test Public Key (starts with pk_test_)
       const handler = PaystackPop.setup({
-        key: "sk_test_f53df2b94af991873f96fe317e60a6b8eb620b40",
+        key: "pk_test_4bf1586ca0dbcd82c09ea209c30c893c00fa4605",
         email: me.email,
         amount: Math.round(amount * 100),
         currency: "USD",
