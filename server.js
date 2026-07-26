@@ -5,6 +5,8 @@ import { productsRouter } from "./routes/products.js";
 import { authRouter } from "./routes/auth.js";
 import { meRouter } from "./routes/me.js";
 import { cartRouter } from "./routes/cart.js";
+import { paymentsRouter } from "./routes/payments.js"; // NEW
+import "dotenv/config"; // NEW
 
 const app = express();
 
@@ -48,10 +50,12 @@ app.use(
 app.use(express.static("public"));
 
 // Application Routing Endpoints
+app.use(express.static("public"));
 app.use("/api/products", productsRouter);
 app.use("/api/auth/me", meRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/cart", cartRouter);
+app.use('/api/payments', paymentsRouter)              // NEW
 
 // Server Initialization and Boot Check
 app
