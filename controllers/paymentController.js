@@ -45,24 +45,37 @@ export async function initializePayment(req, res) {
 }
 
 export async function verifyPayment(req, res) {
-  const { reference } = req.params
+  const { reference } = req.params;
 
   if (!reference) {
-    return res.status(400).json({ error: 'Reference is required.' })
+    return res.status(400).json({ error: "Reference is required." });
   }
 
   try {
     // Ask Paystack if this payment actually went through
-    const response = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
-      headers: {
-        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`
-      }
-    })
+    const response = await fetch(
+      `https://api.paystack.co/transaction/verify/${reference}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        },
+      },
+    );
 
-    const data = await response.json()
+    const data = await response.json();
 
-    if (!data.status || data.data.status !== 'success') {
-      return res.status(400).json({ error: 'Payment not verified.' })
+    if (!data.status || data.data.status !== "success") {
+      return res.status(400).json({ error: "Payment not verified." });
     }
 
-    
+    // Payment confirmed — return the details to frontend
+    res.json({
+      success: true,
+      amount: data.data.amount / 100, // convert back from kobo/cents
+      email: data.data.customer.email,
+    });
+  } catch (err) {
+    console.error("Payment verify error:", err.message);
+    res.status(500).json({ error: "Verification failed." });
+  }
+}
