@@ -10,7 +10,8 @@
   "author": "Sheilla Olga",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
+    "bcryptjs": "^3.0.2",
+    "connect-sqlite3": "^0.9.15",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^4.21.2",
