@@ -9,9 +9,9 @@ import { cartRouter } from "./routes/cart.js";
 import { paymentsRouter } from "./routes/payments.js";
 import "dotenv/config";
 
-// connect-sqlite3 is CommonJS — this is how you import it in an ES module project
+// session-file-store is CommonJS — this is how you import it in an ES module project
 const require = createRequire(import.meta.url);
-const SQLiteStore = require("connect-sqlite3")(session);
+const FileStore = require("session-file-store")(session);
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -25,16 +25,17 @@ app.use(
 );
 
 app.use(express.json());
-
 app.set("trust proxy", 1);
 
 app.use(
   session({
-    // Sessions now stored in sessions.db file instead of memory
-    // This means sessions survive server restarts on Render
-    store: new SQLiteStore({
-      db: "sessions.db",
-      dir: process.cwd(),
+    // Stores sessions in a ./sessions/ folder on disk
+    // Survives Render spinning down — users stay logged in
+    store: new FileStore({
+      path: "./sessions",
+      ttl: 7 * 24 * 60 * 60, // 7 days in seconds
+      retries: 1,
+      logFn: () => {}, // keeps Render logs clean
     }),
     secret: secret,
     resave: false,
@@ -43,7 +44,7 @@ app.use(
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days — user stays logged in
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
     },
   }),
 );
