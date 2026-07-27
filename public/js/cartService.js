@@ -30,10 +30,14 @@ export async function updateCartIcon() {
     const obj = await res.json();
     const totalItems = obj.totalItems;
     const cartBanner = document.getElementById("cart-banner");
+
     if (cartBanner) {
+      // 🔥 FIXED: Injects a single clean link with explicit high-contrast inline styles
       cartBanner.innerHTML =
         totalItems > 0
-          ? `<a href="/cart.html" class="cart-banner-link"><img src="images/cart.png" alt="cart"> Basket (${totalItems})</a>`
+          ? `<a href="/cart.html" class="cart-banner-link" style="background-color: #ffffff !important; color: #121212 !important; display: inline-flex !important; align-items: center; justify-content: center; padding: 0.5rem 1.2rem; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+               <span>🛒 Basket (${totalItems})</span>
+             </a>`
           : "";
     }
   } catch (err) {
