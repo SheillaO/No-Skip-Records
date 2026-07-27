@@ -9,6 +9,9 @@ export async function initializePayment(req, res) {
   }
 
   try {
+    // FIXED: Point to your actual Netlify frontend instead of the Render backend URL
+    const FRONTEND_URL = "https://noskiprecords.netlify.app";
+
     // Call Paystack to create a payment session
     const response = await fetch(
       "https://api.paystack.co/transaction/initialize",
@@ -22,15 +25,20 @@ export async function initializePayment(req, res) {
           email,
           amount: Math.round(amount * 100), // Paystack works in kobo/cents
           currency: "USD",
-          callback_url: `${req.protocol}://${req.get("host")}/success.html`,
+          callback_url: `${FRONTEND_URL}/success.html`,
         }),
       },
     );
 
     const data = await response.json();
 
+    // CRITICAL FIX: If Paystack rejects it, log the real message to Render logs so you can see it
     if (!data.status) {
-      return res.status(500).json({ error: "Payment initialization failed." });
+      console.error("Paystack API Rejected Request:", data.message || data);
+      return res.status(500).json({
+        error: "Payment initialization failed.",
+        details: data.message,
+      });
     }
 
     // Return the reference and authorization URL to the frontend
