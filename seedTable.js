@@ -11,7 +11,7 @@ async function seedTable() {
 
   try {
     // Check if products already exist — don't seed twice
-    const existing = await db.get("SELECT COUNT(*) as count FROM products");
+    const existing = await db.get("SELECT COUNT(*) as count FROM products")
 
     if (existing.count > 0) {
       console.log(
