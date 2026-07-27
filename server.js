@@ -6,6 +6,8 @@ import { authRouter } from "./routes/auth.js";
 import { meRouter } from "./routes/me.js";
 import { cartRouter } from "./routes/cart.js";
 import { paymentsRouter } from "./routes/payments.js";
+import { createTables } from "./createTable.js";
+import { seedProducts, seedDemoUser } from "./seedTable.js";
 import "dotenv/config";
 
 const app = express();
@@ -36,7 +38,7 @@ app.use(
   }),
 );
 
-app.use(express.static("public")); // ← only once now
+app.use(express.static("public"));
 
 app.use("/api/products", productsRouter);
 app.use("/api/auth/me", meRouter);
@@ -44,10 +46,21 @@ app.use("/api/auth", authRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/payments", paymentsRouter);
 
-app
-  .listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  })
-  .on("error", (err) => {
-    console.error("Failed to start server:", err);
-  });
+// Runs your existing createTable.js and seedTable.js logic automatically
+// on every boot, so a fresh database.db is always set up correctly —
+// you don't have to remember to run them by hand after each restart.
+async function startServer() {
+  await createTables();
+  await seedProducts();
+  await seedDemoUser();
+
+  app
+    .listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    })
+    .on("error", (err) => {
+      console.error("Failed to start server:", err);
+    });
+}
+
+startServer();
