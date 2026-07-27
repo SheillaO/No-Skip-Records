@@ -56,10 +56,16 @@ if (dom.checkoutBtn) {
         body: JSON.stringify({ email: me.email, amount }),
       });
 
+      // Guard Clause: Block execution immediately if Render server responds with a 500 or 400 error
+      if (!initRes.ok) {
+        throw new Error(
+          `Server returned status code ${initRes.status} during payment initialization.`,
+        );
+      }
+
       const { reference } = await initRes.json();
 
-      // ⚠️ REPLACE "YOUR_PK_HERE" with your pk_test_... key from Paystack dashboard
-      // Go to: paystack.com → Settings → API Keys → copy Test Public Key (starts with pk_test_)
+      // Open Paystack popup setup
       const handler = PaystackPop.setup({
         key: "pk_test_4bf1586ca0dbcd82c09ea209c30c893c00fa4605",
         email: me.email,
@@ -67,26 +73,38 @@ if (dom.checkoutBtn) {
         currency: "USD",
         ref: reference,
 
-        callback: async function (response) {
-          const verifyRes = await fetch(
-            `${BACKEND_URL}/api/payments/verify/${response.reference}`,
-            { credentials: "include" },
-          );
-          const result = await verifyRes.json();
+        // FIXED: Replaced explicit "async function" with a regular synchronous function wrapper to pass validation checks
+        callback: function (response) {
+          // Isolate asynchronous verification steps safely inside an Immediately Invoked Function Expression (IIFE)
+          (async () => {
+            try {
+              const verifyRes = await fetch(
+                `${BACKEND_URL}/api/payments/verify/${response.reference}`,
+                { credentials: "include" },
+              );
+              const result = await verifyRes.json();
 
-          if (result.success) {
-            await removeAll(dom);
-            if (dom.userMessage)
-              dom.userMessage.textContent =
-                "✅ Payment confirmed! Your records are on their way.";
-            if (dom.checkoutBtn)
-              dom.checkoutBtn.classList.add("visually-hidden");
-            if (dom.cartTotal) dom.cartTotal.classList.add("visually-hidden");
-          } else {
-            if (dom.userMessage)
-              dom.userMessage.textContent =
-                "❌ Payment could not be verified. Please try again.";
-          }
+              if (result.success) {
+                await removeAll(dom);
+                if (dom.userMessage)
+                  dom.userMessage.textContent =
+                    "✅ Payment confirmed! Your records are on their way.";
+                if (dom.checkoutBtn)
+                  dom.checkoutBtn.classList.add("visually-hidden");
+                if (dom.cartTotal)
+                  dom.cartTotal.classList.add("visually-hidden");
+              } else {
+                if (dom.userMessage)
+                  dom.userMessage.textContent =
+                    "❌ Payment could not be verified. Please try again.";
+              }
+            } catch (verifyErr) {
+              console.error("Verification connection error:", verifyErr);
+              if (dom.userMessage)
+                dom.userMessage.textContent =
+                  "Something went wrong verifying payment status.";
+            }
+          })();
         },
 
         onClose: function () {
