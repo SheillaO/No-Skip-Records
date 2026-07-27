@@ -1,25 +1,25 @@
 /* -----------------------------------
-   CSS Variables
+   CSS Variables (Spotify Redesign)
 ----------------------------------- */
 :root {
-    --color-bg: #121212;
-    --color-bg-light: #1A1A1A;
-    --color-accent: #ff4c7b;
-    --color-accent-glow: rgba(255, 76, 123, 0.25);
-    --color-text: #E0E0E0;
-    --color-text-muted: #888;
-    --color-input-bg: #666;
-    --color-placeholder: whitesmoke;
-    --color-bg-lightest: #333;
+    --color-bg: #121212;               /* Spotify black base */
+    --color-bg-light: #181818;         /* Spotify panel background */
+    --color-bg-lightest: #282828;      /* Spotify card / banner hover background */
+    --color-accent: #1ED760;           /* Iconic Spotify Green */
+    --color-accent-glow: rgba(30, 215, 96, 0.2);
+    --color-text: #FFFFFF;             /* Bright white headers */
+    --color-text-muted: #B3B3B3;       /* Spotify secondary gray text */
+    --color-input-bg: #2A2A2A;         /* Dark input block surface */
+    --color-placeholder: #727272;
     --font-base: 'Poppins', sans-serif;
     --font-heading: 'Plaster', sans-serif;
     --space-xs: 0.3rem;
     --space-sm: 0.5rem;
     --space-md: 1rem;
     --space-lg: 2rem;
-    --radius-sm: 3px;
-    --radius-md: 4px;
-    --radius-lg: 8px;
+    --radius-sm: 4px;
+    --radius-md: 8px;                  /* Rounded corners slightly increased */
+    --radius-lg: 50px;                 /* Perfect Spotify pill shapes */
 }
 
 /* -----------------------------------
@@ -33,8 +33,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: var(--color-bg);
-    color: var(--color-text);
+    color: var(--color-text-muted);   /* Secondary copy defaults to crisp gray */
     font-family: var(--font-base);
+    letter-spacing: -0.02em;
 }
 
 /* -----------------------------------
@@ -44,29 +45,40 @@ h1 {
     font-family: var(--font-heading);
     font-size: clamp(1rem, 6vw, 9rem);
     font-weight: 700;
-    color: var(--color-accent);
+    color: var(--color-accent);        /* Massive title transforms to Green */
     text-align: center;
     margin: 0;
     text-transform: uppercase;
 }
 
-h2 { font-size: 1.2rem; padding: var(--space-xs); }
-h3 { font-size: 1rem; }
+h2 { 
+    font-size: 1.4rem; 
+    padding: var(--space-xs); 
+    color: var(--color-text); 
+    font-weight: 700;
+}
+h3 { 
+    font-size: 1.1rem; 
+    color: var(--color-text);
+}
 
 .subhead {
     font-size: clamp(1rem, 2.5vw, 2rem);
     margin: 0;
+    color: var(--color-text);
 }
 
 a {
     color: var(--color-text);
     text-decoration: none;
     font-size: 1em;
+    font-weight: 600;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 
 a:hover {
     color: var(--color-accent);
-    text-decoration: underline;
+    text-decoration: none;             /* Removed ugly underline for a modern look */
 }
 
 /* -----------------------------------
@@ -76,17 +88,24 @@ header, footer {
     padding: var(--space-md) var(--space-lg);
     display: flex;
     align-items: center;
-    background-color: var(--color-bg-light);
+    background-color: var(--color-bg); /* Kept flat black matching desktop players */
 }
 
-header { justify-content: space-between; }
+header { 
+    justify-content: space-between; 
+    border-bottom: 1px solid #282828;
+}
 
-header img { width: clamp(80px, 15vw, 200px); }
+header img { 
+    width: clamp(80px, 15vw, 200px); 
+    filter: drop-shadow(0px 2px 8px rgba(0,0,0,0.5));
+}
 
 footer {
     justify-content: center;
     margin-top: var(--space-lg);
-    border-top: 1px solid #222;
+    border-top: 1px solid #282828;
+    background-color: var(--color-bg-light);
 }
 
 footer a {
@@ -115,90 +134,114 @@ footer a {
    Hero Section
 ----------------------------------- */
 .hero {
-    padding: 3.5em var(--space-lg) 2.5em;
+    padding: 4em var(--space-lg) 3em;
     text-align: center;
-    background: linear-gradient(160deg, #200a20 0%, #121212 65%);
-    border-bottom: 1px solid rgba(255, 76, 123, 0.2);
+    /* Spotify Dark Palette fade mix instead of purple */
+    background: linear-gradient(180deg, #1e1e1e 0%, #121212 100%);
+    border-bottom: 1px solid #282828;
 }
 
 .hero-tag {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--color-accent);
-    letter-spacing: 0.12em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     margin: 0 0 0.75em 0;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .hero-headline {
-    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    font-size: clamp(1.8rem, 4vw, 3rem);
     color: #ffffff;
-    margin: 0 0 0.75em 0;
-    font-weight: 700;
+    margin: 0 0 0.5em 0;
+    font-weight: 800;
     font-family: var(--font-base);
-    line-height: 1.2;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
 }
 
 .hero-body {
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: var(--color-text-muted);
-    max-width: 560px;
-    margin: 0 auto 1.5em;
-    line-height: 1.7;
+    max-width: 580px;
+    margin: 0 auto 1.75em;
+    line-height: 1.6;
 }
 
 .hero-pills {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6em;
+    gap: 0.75em;
     justify-content: center;
 }
 
 .pill {
-    background: rgba(255, 76, 123, 0.12);
-    border: 1px solid rgba(255, 76, 123, 0.35);
+    background: #282828;
+    border: 1px solid transparent;
     color: var(--color-text);
-    font-size: 0.8rem;
-    padding: 0.35em 0.85em;
-    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.5em 1.25em;
+    border-radius: var(--radius-lg);   /* Beautiful pill-shaped badges */
     white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.pill:hover {
+    background-color: #3e3e3e;
+    transform: scale(1.04);
+    cursor: pointer;
 }
 
 /* -----------------------------------
-   Top Banner
+   Top Sticky Search Banner
 ----------------------------------- */
 .top-banner {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 1em;
-    padding: var(--space-sm) var(--space-md);
-    background-color: var(--color-bg-lightest);
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(18, 18, 18, 0.85);
+    backdrop-filter: blur(25px);      /* Glassy search header bar overlay */
     position: sticky;
     top: 0;
     z-index: 10;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .top-banner-greeting {
-    font-size: .8em;
+    font-size: .9em;
+    font-weight: 700;
+    color: #ffffff;
     margin: 0;
     margin-right: auto;
 }
 
 .top-banner input {
     margin-left: var(--space-md);
-    padding: var(--space-sm);
-    border: none;
-    border-radius: var(--radius-md);
+    padding: 0.6rem 1.2rem;
+    padding-left: 2.5rem;             /* Allows padding space if adding a search icon later */
+    border: 1px solid transparent;
+    border-radius: var(--radius-lg);  /* Circular pill capsule input bar layout */
     background-color: var(--color-input-bg);
     color: white;
+    font-weight: 500;
+    font-size: 0.85rem;
+    width: 240px;
+    transition: background-color 0.2s ease, border-color 0.2s ease, width 0.2s ease;
+}
+
+.top-banner input:focus {
+    outline: none;
+    background-color: #333333;
+    border-color: #555555;
+    width: 280px;                     /* Subtle expand element feature when focused */
 }
 
 .top-banner input::placeholder {
-    color: var(--color-placeholder);
-    transition: color 0.2s ease;
+    color: #757575;
 }
-
 .top-banner input:focus::placeholder { color: transparent; }
 
 .header-text {
@@ -216,117 +259,133 @@ footer a {
 .menu-toggle { display: none; }
 
 /* -----------------------------------
-   Product Cards
+   Product Cards (Spotify Collection Cards)
 ----------------------------------- */
 .product-card {
     display: flex;
     flex-direction: column;
     position: relative;
-    background-color: var(--color-bg-lightest);
+    background-color: var(--color-bg-light); /* Swapped from lightest to smooth panel dark */
+    padding: var(--space-md);
     padding-bottom: var(--space-md);
-    border-radius: var(--radius-lg);
-    text-align: center;
+    border-radius: var(--radius-md);
+    text-align: left;                       /* Changed to left-aligned like song titles */
     height: 100%;
-    align-items: center;
+    align-items: flex-start;                /* Aligned flex children to starting column edge */
     justify-content: space-between;
     width: 100%;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color 0.3s ease;
     overflow: hidden;
 }
 
 .product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px var(--color-accent-glow);
+    background-color: var(--color-bg-lightest); /* Highlight background surface color on hover */
+    transform: none;                            /* Removed translation bouncing effect */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);  /* Deep professional shadow offset drop */
 }
 
 .product-card img {
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border-radius: var(--radius-sm);            /* Uniform album sleeve rounded cornering */
+    margin-bottom: var(--space-sm);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     transition: transform 0.3s ease;
 }
 
 .product-card:hover img {
-    transform: scale(1.04);
+    transform: scale(1.02);                     /* Subtle visual zoom elevation cue */
 }
 
 /* -----------------------------------
-   Buttons
+   Buttons (Spotify Action Pill Style)
 ----------------------------------- */
 .main-btn, .add-btn {
-    padding: 0.7em 1.4em;
-    background: linear-gradient(135deg, var(--color-accent) 0%, #c0305a 100%);
-    color: white;
+    padding: 0.6em 1.5em;
+    background-color: #ffffff;                 /* Primary action defaults to stark bright white contrast */
+    color: var(--color-bg);                    /* Text flips to matching dark mode base color */
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);           /* Pill capsule styling configuration */
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;                          /* High-weight visibility profile layout */
     font-family: var(--font-base);
-    transition: opacity 0.2s ease, transform 0.15s ease;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .main-btn:hover, .add-btn:hover {
-    opacity: 0.88;
+    background-color: #f6f6f6;
+    transform: scale(1.04);                    /* Standard scaling expansion metric */
+    opacity: 1;
 }
 
-.form-btn:hover, .main-btn:hover, .add-btn:hover {
-    background: linear-gradient(135deg, #c0305a 0%, var(--color-accent) 100%);
+.form-btn:hover {
+    background-color: #1fdf64;                 /* Highlight fields to glowing green */
+    transform: scale(1.02);
 }
 
 .form-btn:active, .main-btn:active, .add-btn:active {
-    transform: scale(0.96);
+    transform: scale(0.98);                    /* Downward click response indicator */
 }
 
+/* Redesigned Minimal Album Metadata Tag */
 .genre-label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 0.2rem 0.5rem;
-    background-color: var(--color-accent);
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border-bottom-right-radius: var(--radius-md);
-    border-top-left-radius: var(--radius-md);
+    position: relative;                        /* Bypassed absolute overlapping anchors */
+    order: -1;                                 /* Shifts elements above item headers */
+    margin-bottom: var(--space-xs);
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
 }
 
 /* -----------------------------------
    Shuffle & Surprise
 ----------------------------------- */
 #shuffle-btn, #surprise-btn {
-    padding: 0.5em 1.1em;
+    padding: 0.5em 1.4em;
     background: transparent;
     color: var(--color-text);
-    border: 1px solid var(--color-accent);
-    border-radius: 20px;
+    border: 1px solid var(--color-text-muted);
+    border-radius: var(--radius-lg);           /* Circular capsule edges */
     cursor: pointer;
+    font-weight: 700;
     font-family: var(--font-base);
-    font-size: 0.9rem;
-    transition: background 0.2s, color 0.2s;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
 }
 
 #shuffle-btn:hover, #surprise-btn:hover {
-    background: var(--color-accent);
-    color: white;
+    border-color: #ffffff;
+    transform: scale(1.04);
+}
+
+/* Target item activation highlight state tracking */
+#shuffle-btn:focus, #surprise-btn:focus {
+    background-color: var(--color-accent);     /* Pops standard accent branding indicators */
+    color: var(--color-bg);
+    border-color: var(--color-accent);
 }
 
 .surprise-pick {
-    max-width: 220px;
-    margin: 1em auto;
+    max-width: 240px;
+    margin: 2em auto;
     padding: var(--space-md);
     background-color: var(--color-bg-light);
-    border: 1px solid rgba(255, 76, 123, 0.3);
-    border-radius: var(--radius-lg);
+    border: 1px solid #282828;
+    border-radius: var(--radius-md);
     text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
 }
 
 .surprise-pick img {
     width: 100%;
-    border-radius: var(--radius-md);
-    margin-bottom: 0.5em;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-sm);
 }
 
 /* -----------------------------------
@@ -335,82 +394,117 @@ footer a {
 section label { padding: var(--space-xs); }
 
 select {
-    padding: var(--space-xs);
+    padding: 0.5rem var(--space-md);
     background-color: var(--color-bg-lightest);
     color: white;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.85rem;
     cursor: pointer;
-    border: 1px solid #444;
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+select:hover {
+    border-color: #555555;
 }
 
 .sign-forms {
     display: flex;
     flex-direction: column;
-    max-width: 420px;
-    margin: 2em auto;
+    max-width: 440px;
+    margin: 4em auto;
     padding: 0 var(--space-md);
 }
 
 .form-inner {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
     background: var(--color-bg-light);
-    padding: 2em;
-    border-radius: var(--radius-lg);
-    border: 1px solid #2a2a2a;
+    padding: 2.5em;
+    border-radius: var(--radius-md);
+    border: 1px solid #282828;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.5);
 }
 
 .form-inner input {
-    padding: 0.7em;
-    background: #1e1e1e;
-    border: 1px solid #3a3a3a;
-    color: var(--color-text);
+    padding: 0.85em;
+    background: #2a2a2a;
+    border: 1px solid transparent;
+    color: #ffffff;
     border-radius: var(--radius-sm);
     font-family: var(--font-base);
+    font-weight: 500;
+    transition: background-color 0.2s, border-color 0.2s;
 }
 
 .form-inner input:focus {
-    border-color: var(--color-accent);
+    border-color: #555555;
+    background-color: #333333;
     outline: none;
 }
 
-.form-inner label { margin-bottom: -4px; }
-
-.sign-link { color: var(--color-accent); cursor: pointer; }
-
-.form-btn {
-    margin-top: 0.5em;
-    background: linear-gradient(135deg, var(--color-accent) 0%, #c0305a 100%);
-    color: white;
-    padding: 0.8em 1.5em;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: opacity 0.2s;
-    font-size: 1rem;
+.form-inner label { 
+    margin-bottom: -4px; 
+    color: #ffffff;
+    font-size: 0.85rem;
     font-weight: 600;
-    font-family: var(--font-base);
 }
 
-.form-btn:hover { opacity: 0.88; }
+.sign-link { 
+    color: #ffffff; 
+    text-decoration: underline;
+    cursor: pointer; 
+}
+.sign-link:hover {
+    color: var(--color-accent);
+}
+
+.form-btn {
+    margin-top: 1em;
+    background-color: var(--color-accent);     /* Bold Spotify Green layout form trigger */
+    color: var(--color-bg);
+    padding: 0.9em 2em;
+    border: none;
+    border-radius: var(--radius-lg);           /* Capsule pill shape formatting */
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.form-btn:hover { 
+    background-color: #1fdf64;
+    transform: scale(1.02);
+    opacity: 1;
+}
 
 .error {
-    color: var(--color-accent);
-    font-size: 0.85rem;
+    color: #ff4d4d;                            /* True validation red */
+    font-size: 0.8rem;
     margin: 0;
+    font-weight: 600;
 }
 
 /* -----------------------------------
-   Cart
+   Cart View Display Interface Panels
 ----------------------------------- */
 .cart-main {
     margin: 0 auto;
-    padding: 2em 1.5em;
-    max-width: 600px;
+    padding: 3em 1.5em;
+    max-width: 650px;
 }
 
-.cart-main h2 { margin-bottom: 1em; }
+.cart-main h2 { 
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 1.5em; 
+    letter-spacing: -0.03em;
+}
 
 .cart-main ul {
     list-style: none;
@@ -419,44 +513,81 @@ select {
 }
 
 .cart-main ul li {
-    margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid #2a2a2a;
+    margin-bottom: 0.75rem;
+    padding: var(--space-md);
+    background-color: var(--color-bg-light);   /* Wrap lists inside isolated playlist modules */
+    border-radius: var(--radius-md);
+    border-bottom: none;
 }
 
 .cart-main ul li div {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
-.cart-main ul li span { font-size: 14px; }
+.cart-main ul li span { 
+    font-size: 0.9rem; 
+    color: var(--color-text-muted);
+}
 
 .cart-main ul li button {
     background-color: transparent;
     margin-left: auto;
     border: 0;
+    font-size: 1.1rem;
     cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
 }
 
-.disabled { opacity: 0.4; cursor: not-allowed; }
+.cart-main ul li button:hover {
+    opacity: 1;
+    transform: scale(1.15);
+}
 
-.cart-banner-link { display: flex; align-items: center; }
+.disabled { 
+    background-color: #333333 !important;
+    color: #727272 !important;
+    cursor: not-allowed; 
+    opacity: 0.5;
+}
 
-.cart-banner-link a { color: var(--color-accent); }
+/* Navigation Capsule Shopping Link Badge formatting */
+.cart-banner-link { 
+    display: inline-flex; 
+    align-items: center; 
+    background: #ffffff;
+    padding: 0.4rem 1.1rem;
+    border-radius: var(--radius-lg);
+    transition: transform 0.2s ease;
+}
+.cart-banner-link:hover {
+    transform: scale(1.04);
+}
+
+.cart-banner-link a { 
+    color: var(--color-bg) !important; 
+    font-weight: 700;
+    font-size: 0.85rem;
+}
 
 .cart-banner-link a:hover { text-decoration: none; }
 
-.cart-banner-link img { max-width: 1em; }
-
-/* -----------------------------------
-   Accessibility
------------------------------------ */
-a:focus, button:focus, input:focus, select:focus {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+.cart-banner-link img { 
+    max-width: 1.1em; 
+    margin-right: 0.4rem;
 }
 
-button:active { transform: scale(0.96); }
+/* -----------------------------------
+   Accessibility Focus Outlines
+----------------------------------- */
+a:focus, button:focus, input:focus, select:focus {
+    outline: 2px solid #ffffff;                /* Sharp contrasting layout accessibility ring boundary */
+    outline-offset: 3px;
+}
+
+button:active { transform: scale(0.97); }
 
 .visually-hidden {
     position: absolute;
@@ -470,7 +601,7 @@ button:active { transform: scale(0.96); }
 }
 
 /* -----------------------------------
-   Media Queries
+   Responsive Media Breakdown
 ----------------------------------- */
 @media (max-width: 768px) {
     .header-menu {
@@ -478,15 +609,17 @@ button:active { transform: scale(0.96); }
         flex-direction: column;
         align-items: flex-start;
         background-color: var(--color-bg-lightest);
-        padding: var(--space-md);
+        padding: var(--space-lg);
         position: absolute;
         top: 100%;
         right: 0;
         z-index: 10;
-        border-left: 2px solid var(--color-accent);
-        border-bottom: 2px solid var(--color-accent);
+        border-left: none;
+        border-bottom: 1px solid #333;
         min-height: 100vh;
-        gap: 1em;
+        width: 260px;
+        gap: 1.5em;
+        box-shadow: -10px 10px 30px rgba(0,0,0,0.6);
     }
 
     .header-menu.open { display: flex; }
@@ -496,20 +629,4 @@ button:active { transform: scale(0.96); }
         cursor: pointer;
         background-color: transparent;
         border: none;
-        color: white;
-        align-self: center;
-        font-size: 2em;
-    }
-
-    .menu-toggle img { display: block; }
-
-    .top-banner input { margin-left: 0; }
-
-    header { padding: var(--space-md); }
-
-    .hero { padding: 2em var(--space-md); }
-
-    .hero-pills { gap: 0.4em; }
-
-    .sign-forms { max-width: 100%; }
-}
+color: white;align-self: center;font-size: 1.75em;}.menu-toggle img { display: block; }.top-banner input {margin-left: 0;width: 100%;}.top-banner input:focus {width: 100%;}header { padding: var(--space-md); }.hero { padding: 3em var(--space-md) 2em; }.hero-pills { gap: 0.5em; }.sign-forms { max-width: 100%; }}
