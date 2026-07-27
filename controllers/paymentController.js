@@ -9,10 +9,10 @@ export async function initializePayment(req, res) {
   }
 
   try {
-    // FIXED: Point to your actual Netlify frontend instead of the Render backend URL
+   
     const FRONTEND_URL = "https://noskiprecords.netlify.app";
 
-    // Call Paystack to create a payment session
+    
     const response = await fetch(
       "https://api.paystack.co/transaction/initialize",
       {
@@ -41,7 +41,7 @@ export async function initializePayment(req, res) {
       });
     }
 
-    // Return the reference and authorization URL to the frontend
+    
     res.json({
       reference: data.data.reference,
       authorizationUrl: data.data.authorization_url,
@@ -60,7 +60,7 @@ export async function verifyPayment(req, res) {
   }
 
   try {
-    // Ask Paystack if this payment actually went through
+    
     const response = await fetch(
       `https://api.paystack.co/transaction/verify/${reference}`,
       {
@@ -79,7 +79,7 @@ export async function verifyPayment(req, res) {
     // Payment confirmed — return the details to frontend
     res.json({
       success: true,
-      amount: data.data.amount / 100, // convert back from cents/subunits
+      amount: data.data.amount / 100, 
       email: data.data.customer.email,
     });
   } catch (err) {

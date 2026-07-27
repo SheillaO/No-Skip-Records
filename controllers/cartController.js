@@ -84,7 +84,7 @@ export async function deleteItem(req, res) {
     );
 
     if (!item) {
-      return res.status(404).json({ error: "Item not found" }); // Updated 400 to 404 for accuracy
+      return res.status(404).json({ error: "Item not found" }); 
     }
 
     await db.run("DELETE FROM cart_items WHERE id = ? AND user_id = ?", [
