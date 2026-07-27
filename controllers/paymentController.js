@@ -23,8 +23,8 @@ export async function initializePayment(req, res) {
         },
         body: JSON.stringify({
           email,
-          amount: Math.round(amount * 100), // Paystack works in kobo/cents
-          currency: "USD",
+          amount: Math.round(amount * 100), // Paystack works in cents/subunits (e.g. 100 KES = 10000 cents)
+          currency: "KES", // 🔥 CHANGED: Updated from USD to Kenya Shillings
           callback_url: `${FRONTEND_URL}/success.html`,
         }),
       },
@@ -79,7 +79,7 @@ export async function verifyPayment(req, res) {
     // Payment confirmed — return the details to frontend
     res.json({
       success: true,
-      amount: data.data.amount / 100, // convert back from kobo/cents
+      amount: data.data.amount / 100, // convert back from cents/subunits
       email: data.data.customer.email,
     });
   } catch (err) {

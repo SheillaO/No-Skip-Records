@@ -70,12 +70,10 @@ if (dom.checkoutBtn) {
         key: "pk_test_4bf1586ca0dbcd82c09ea209c30c893c00fa4605",
         email: me.email,
         amount: Math.round(amount * 100),
-        currency: "USD",
+        currency: "KES", // 🔥 CHANGED: Configured channel profile mapping for Kenya Shillings
         ref: reference,
 
-        // FIXED: Replaced explicit "async function" with a regular synchronous function wrapper to pass validation checks
         callback: function (response) {
-          // Isolate asynchronous verification steps safely inside an Immediately Invoked Function Expression (IIFE)
           (async () => {
             try {
               const verifyRes = await fetch(
@@ -91,8 +89,7 @@ if (dom.checkoutBtn) {
                     "✅ Payment confirmed! Your records are on their way.";
                 if (dom.checkoutBtn)
                   dom.checkoutBtn.classList.add("visually-hidden");
-                if (dom.cartTotal)
-                  dom.cartTotal.classList.add("visually-hidden");
+                if (dom.cartTotal) dom.cartTotal.classList.add("visually-hidden");
               } else {
                 if (dom.userMessage)
                   dom.userMessage.textContent =
@@ -101,8 +98,7 @@ if (dom.checkoutBtn) {
             } catch (verifyErr) {
               console.error("Verification connection error:", verifyErr);
               if (dom.userMessage)
-                dom.userMessage.textContent =
-                  "Something went wrong verifying payment status.";
+                dom.userMessage.textContent = "Something went wrong verifying payment status.";
             }
           })();
         },
