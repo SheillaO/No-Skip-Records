@@ -48,13 +48,14 @@ if (dom.checkoutBtn) {
       }
 
       if (dom.userMessage)
-        dom.userMessage.textContent = "🔄 Initializing secure payment...";
+        dom.userMessage.textContent =
+          "🔄 Connecting to a secure KES checkout channel...";
 
       const initRes = await fetch(`${BACKEND_URL}/api/payments/initialize`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email: me.email, amount }), // Securely passing email attributes here
+        body: JSON.stringify({ email: me.email, amount }),
       });
 
       if (!initRes.ok) {
@@ -63,56 +64,20 @@ if (dom.checkoutBtn) {
         );
       }
 
-      const { reference } = await initRes.json();
+      // 🔥 CRITICAL REFACTOR: Extract the authorizationUrl from your backend payload package
+      const { authorizationUrl } = await initRes.json();
 
-      if (typeof PaystackPop === "undefined") {
-        throw new Error("Paystack SDK script header failed to load or parse.");
+      if (authorizationUrl) {
+        // Clear local UI components right before leaving the tab frame
+        await removeAll(dom);
+
+        // 🔥 UNCRASHABLE SOLUTION: Navigates out of the local window layout straight into Paystack's hosted tab
+        window.location.href = authorizationUrl;
+      } else {
+        throw new Error(
+          "Could not retrieve a valid payment gateway authorization URL from server.",
+        );
       }
-
-      const handler = PaystackPop.setup({
-        key: "pk_test_4bf1586ca0dbcd82c09ea209c30c893c00fa4605",
-        email: me.email,
-        amount: Math.round(amount * 100),
-        currency: "KES",
-        ref: reference,
-
-        callback: function (response) {
-          (async () => {
-            try {
-              const verifyRes = await fetch(
-                `${BACKEND_URL}/api/payments/verify/${response.reference}`,
-                { credentials: "include" },
-              );
-              const result = await verifyRes.json();
-
-              if (result.success) {
-                await removeAll(dom);
-                if (dom.userMessage)
-                  dom.userMessage.textContent =
-                    "✅ Payment confirmed! Your records are on their way.";
-                if (dom.checkoutBtn)
-                  dom.checkoutBtn.classList.add("visually-hidden");
-                if (dom.cartTotal)
-                  dom.cartTotal.classList.add("visually-hidden");
-              } else {
-                if (dom.userMessage)
-                  dom.userMessage.textContent =
-                    "❌ Payment could not be verified. Please try again.";
-              }
-            } catch (verifyErr) {
-              console.error("Verification connection error:", verifyErr);
-            }
-          })();
-        },
-
-        onClose: function () {
-          if (dom.userMessage)
-            dom.userMessage.textContent =
-              "Payment cancelled. Your cart is still saved.";
-        },
-      });
-
-      handler.openIframe();
     } catch (err) {
       console.error("Checkout error:", err);
       if (dom.userMessage)
