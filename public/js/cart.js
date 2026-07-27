@@ -28,7 +28,6 @@ if (dom.cartList) {
 if (dom.checkoutBtn) {
   dom.checkoutBtn.addEventListener("click", async () => {
     try {
-      // FIXED: was "/api/auth/me" (relative) — broken from Netlify to Render
       const meRes = await fetch(`${BACKEND_URL}/api/auth/me`, {
         credentials: "include",
       });
@@ -48,7 +47,10 @@ if (dom.checkoutBtn) {
         return;
       }
 
-      // FIXED: was "/api/payments/initialize" (relative) — broken from Netlify to Render
+      if (dom.userMessage) {
+        dom.userMessage.textContent = "🔄 Initializing secure payment...";
+      }
+
       const initRes = await fetch(`${BACKEND_URL}/api/payments/initialize`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -56,7 +58,6 @@ if (dom.checkoutBtn) {
         body: JSON.stringify({ email: me.email, amount }),
       });
 
-      // Guard Clause: Block execution immediately if Render server responds with a 500 or 400 error
       if (!initRes.ok) {
         throw new Error(
           `Server returned status code ${initRes.status} during payment initialization.`,
@@ -65,15 +66,23 @@ if (dom.checkoutBtn) {
 
       const { reference } = await initRes.json();
 
-      // Open Paystack popup setup
+      // 🔥 CRITICAL LAYOUT FIX: Re-verify that the global Paystack constructor object is explicitly ready
+      if (typeof PaystackPop === "undefined") {
+        throw new Error(
+          "Paystack SDK script header failed to load or parse in the global window layout scope.",
+        );
+      }
+
+      // Re-instantiate a clean isolated object instance to completely avoid target document context errors
       const handler = PaystackPop.setup({
         key: "pk_test_4bf1586ca0dbcd82c09ea209c30c893c00fa4605",
         email: me.email,
         amount: Math.round(amount * 100),
-        currency: "KES", // 🔥 CHANGED: Configured channel profile mapping for Kenya Shillings
+        currency: "KES", // Verified Kenya Shillings channel
         ref: reference,
 
         callback: function (response) {
+          // Wrapped safely inside an immediately invoked function to bypass type constraints
           (async () => {
             try {
               const verifyRes = await fetch(
@@ -89,7 +98,8 @@ if (dom.checkoutBtn) {
                     "✅ Payment confirmed! Your records are on their way.";
                 if (dom.checkoutBtn)
                   dom.checkoutBtn.classList.add("visually-hidden");
-                if (dom.cartTotal) dom.cartTotal.classList.add("visually-hidden");
+                if (dom.cartTotal)
+                  dom.cartTotal.classList.add("visually-hidden");
               } else {
                 if (dom.userMessage)
                   dom.userMessage.textContent =
@@ -98,7 +108,8 @@ if (dom.checkoutBtn) {
             } catch (verifyErr) {
               console.error("Verification connection error:", verifyErr);
               if (dom.userMessage)
-                dom.userMessage.textContent = "Something went wrong verifying payment status.";
+                dom.userMessage.textContent =
+                  "Something went wrong verifying payment status.";
             }
           })();
         },
@@ -110,6 +121,7 @@ if (dom.checkoutBtn) {
         },
       });
 
+      // Call the iframe overlay anchor link directly
       handler.openIframe();
     } catch (err) {
       console.error("Checkout error:", err);
