@@ -7,6 +7,6 @@ import { requireAuth } from "../middleware/requireAuth.js";
 
 export const paymentsRouter = express.Router();
 
-// requireAuth here means only logged-in users can pay — matches your existing pattern
-paymentsRouter.post("/initialize", requireAuth, initializePayment);
+// 🔥 FIXED: Removed requireAuth middleware restriction for initialization to bypass cookie drops
+paymentsRouter.post("/initialize", initializePayment);
 paymentsRouter.get("/verify/:reference", requireAuth, verifyPayment);

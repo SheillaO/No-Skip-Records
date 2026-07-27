@@ -47,15 +47,14 @@ if (dom.checkoutBtn) {
         return;
       }
 
-      if (dom.userMessage) {
+      if (dom.userMessage)
         dom.userMessage.textContent = "🔄 Initializing secure payment...";
-      }
 
       const initRes = await fetch(`${BACKEND_URL}/api/payments/initialize`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email: me.email, amount }),
+        body: JSON.stringify({ email: me.email, amount }), // Securely passing email attributes here
       });
 
       if (!initRes.ok) {
@@ -66,23 +65,18 @@ if (dom.checkoutBtn) {
 
       const { reference } = await initRes.json();
 
-      // 🔥 CRITICAL LAYOUT FIX: Re-verify that the global Paystack constructor object is explicitly ready
       if (typeof PaystackPop === "undefined") {
-        throw new Error(
-          "Paystack SDK script header failed to load or parse in the global window layout scope.",
-        );
+        throw new Error("Paystack SDK script header failed to load or parse.");
       }
 
-      // Re-instantiate a clean isolated object instance to completely avoid target document context errors
       const handler = PaystackPop.setup({
         key: "pk_test_4bf1586ca0dbcd82c09ea209c30c893c00fa4605",
         email: me.email,
         amount: Math.round(amount * 100),
-        currency: "KES", // Verified Kenya Shillings channel
+        currency: "KES",
         ref: reference,
 
         callback: function (response) {
-          // Wrapped safely inside an immediately invoked function to bypass type constraints
           (async () => {
             try {
               const verifyRes = await fetch(
@@ -107,9 +101,6 @@ if (dom.checkoutBtn) {
               }
             } catch (verifyErr) {
               console.error("Verification connection error:", verifyErr);
-              if (dom.userMessage)
-                dom.userMessage.textContent =
-                  "Something went wrong verifying payment status.";
             }
           })();
         },
@@ -121,7 +112,6 @@ if (dom.checkoutBtn) {
         },
       });
 
-      // Call the iframe overlay anchor link directly
       handler.openIframe();
     } catch (err) {
       console.error("Checkout error:", err);
