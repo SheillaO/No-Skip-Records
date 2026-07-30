@@ -30,7 +30,7 @@ export function renderGreeting(name) {
   document.getElementById("greeting").textContent = `Welcome, ${user}!`;
 }
 
-// ===== Only display logout button if logged in, else display log in/sign in options =====
+
 
 export function showHideMenuItems(name) {
   const isLoggedIn = name;

@@ -1,5 +1,3 @@
-// ===== Configuration =====
-// Directs your login form credentials to your live Render database engine
 const BACKEND_URL = "https://no-skip-records.onrender.com";
 
 const signinForm = document.getElementById("signin-form");

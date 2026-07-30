@@ -9,7 +9,7 @@ import { cartRouter } from "./routes/cart.js";
 import { paymentsRouter } from "./routes/payments.js";
 import "dotenv/config";
 
-// session-file-store is CommonJS — this is how you import it in an ES module project
+
 const require = createRequire(import.meta.url);
 const FileStore = require("session-file-store")(session);
 
@@ -29,13 +29,12 @@ app.set("trust proxy", 1);
 
 app.use(
   session({
-    // Stores sessions in a ./sessions/ folder on disk
-    // Survives Render spinning down — users stay logged in
+    
     store: new FileStore({
       path: "./sessions",
-      ttl: 7 * 24 * 60 * 60, // 7 days in seconds
+      ttl: 7 * 24 * 60 * 60, 
       retries: 1,
-      logFn: () => {}, // keeps Render logs clean
+      logFn: () => {}, 
     }),
     secret: secret,
     resave: false,

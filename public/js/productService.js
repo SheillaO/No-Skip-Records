@@ -1,4 +1,3 @@
-// Change this line to your live link
 const BACKEND_URL = "https://no-skip-records.onrender.com";
 
 export async function getProducts(filters = {}) {

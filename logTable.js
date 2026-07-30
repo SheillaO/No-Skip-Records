@@ -1,7 +1,6 @@
 import { getDBConnection } from "./db/db.js";
 
-// --- CONFIGURATION ---
-// 1. Choose your table: 'cart_items', 'products', or 'users'
+
 const tableName = "products";
 
 // 2. Set to true if you want the custom filtered column view for the products table

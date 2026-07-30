@@ -1,5 +1,3 @@
-// ===== Configuration Configuration =====
-// Routes new user registrations straight to your active live Render database server
 const BACKEND_URL = "https://no-skip-records.onrender.com";
 
 const signupForm = document.getElementById("signup-form");
